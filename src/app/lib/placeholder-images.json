@@ -1,0 +1,17 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "main-logo",
+      "description": "Better Call Hana Main Logo",
+      "imageUrl": "https://picsum.photos/seed/hana-dental-logo/600/200",
+      "imageHint": "dental logo"
+    },
+    {
+      "id": "h-icon",
+      "description": "Better Call Hana H Icon",
+      "imageUrl": "https://picsum.photos/seed/hana-icon/100/100",
+      "imageHint": "minimalist logo"
+    }
+  ]
+}

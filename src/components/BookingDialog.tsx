@@ -71,7 +71,7 @@ export function BookingDialog({
             {/* Secondary Choice: Contact Details / Email */}
             <Button 
               variant="outline"
-              className="w-full h-auto min-h-[6rem] md:min-h-[7rem] py-4 md:py-0 rounded-[1.75rem] border-2 border-border/40 hover:border-primary/20 hover:bg-muted/20 transition-all duration-300 flex items-center justify-between px-6 md:px-8 group/mail"
+              className="w-full h-auto min-h-[6rem] md:min-h-[7rem] py-4 md:py-0 rounded-[1.75rem] border-2 border-border/40 hover:border-primary/20 hover:bg-muted/20 hover:text-foreground transition-all duration-300 flex items-center justify-between px-6 md:px-8 group/mail"
               onClick={() => window.location.href = `mailto:${EMAIL}`}
             >
               <div className="flex items-center gap-4 md:gap-6 min-w-0 w-full pr-4">
@@ -79,7 +79,7 @@ export function BookingDialog({
                   <Mail className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground group-hover/mail:text-primary" />
                 </div>
                 <div className="text-left min-w-0 flex-1">
-                  <p className="text-xl md:text-2xl font-black tracking-tight mb-1">Contact Details</p>
+                  <p className="text-xl md:text-2xl font-black tracking-tight mb-1 text-foreground">Contact Details</p>
                   <p className="text-[10px] md:text-xs font-semibold text-muted-foreground/70 break-all leading-tight">
                     {EMAIL}
                   </p>

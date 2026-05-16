@@ -10,9 +10,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Calendar, CheckCircle2 } from "lucide-react"
+import { Calendar, Mail, ArrowRight, Zap } from "lucide-react"
 
 export function BookingDialog({
   open,
@@ -21,111 +19,82 @@ export function BookingDialog({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const [step, setStep] = React.useState(1)
-  const [formData, setFormData] = React.useState({
-    name: "",
-    email: "",
-    phone: "",
-  })
-
-  const handleNext = (e: React.FormEvent) => {
-    e.preventDefault()
-    setStep(2)
-  }
+  const CALENDAR_URL = "https://cal.eu/muhammed.ali/ai"
+  const EMAIL = "muhammed@bettercallhana.com"
 
   return (
-    <Dialog open={open} onOpenChange={(val) => {
-      onOpenChange(val)
-      if (!val) setStep(1)
-    }}>
-      <DialogContent className="sm:max-w-[440px] w-[95vw] sm:w-full rounded-[2rem] sm:rounded-[2.5rem] p-0 border-none shadow-2xl overflow-hidden">
-        {/* Scrollable Container with consistent ROI-style logic */}
-        <div className="max-h-[85vh] overflow-y-auto p-6 md:p-8 scrollbar-hide">
-          {step === 1 ? (
-            <div className="space-y-6">
-              <DialogHeader className="text-left">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                  <Calendar className="w-5 h-5 text-primary" />
-                </div>
-                <DialogTitle className="text-2xl font-bold tracking-tight">Book a Demo</DialogTitle>
-                <DialogDescription className="text-base text-muted-foreground">
-                  Enter your details to view Hana's availability.
-                </DialogDescription>
-              </DialogHeader>
-              
-              <form onSubmit={handleNext} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 ml-1">Business / Full Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="Your Name"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="h-12 rounded-xl bg-muted/40 border-transparent focus:bg-white transition-all text-base"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 ml-1">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="name@business.com"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="h-12 rounded-xl bg-muted/40 border-transparent focus:bg-white transition-all text-base"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 ml-1">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="(555) 000-0000"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="h-12 rounded-xl bg-muted/40 border-transparent focus:bg-white transition-all text-base"
-                  />
-                </div>
-                <Button type="submit" className="w-full h-14 text-base font-bold rounded-full mt-4 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-                  Continue to Calendar
-                </Button>
-                
-                {/* Generous Keyboard Buffer - matches ROI calculator */}
-                <div className="h-32 sm:hidden" />
-              </form>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[460px] w-[95vw] sm:w-full rounded-[2.5rem] sm:rounded-[3rem] p-0 border-none shadow-2xl overflow-hidden bg-white">
+        {/* Premium Concierge Layout */}
+        <div className="max-h-[90vh] overflow-y-auto p-8 md:p-12 scrollbar-hide">
+          <DialogHeader className="text-center mb-10 md:mb-12">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-[1.5rem] flex items-center justify-center mx-auto mb-8 relative">
+              <div className="absolute inset-0 bg-primary/20 rounded-[1.5rem] animate-ping opacity-20" />
+              <Zap className="w-8 h-8 md:w-10 md:h-10 text-primary" />
             </div>
-          ) : (
-            <div className="space-y-6">
-              <DialogHeader className="text-left">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
+            <DialogTitle className="text-3xl md:text-4xl font-black tracking-tight mb-4">Start Scaling Today</DialogTitle>
+            <DialogDescription className="text-base md:text-lg text-muted-foreground font-medium leading-relaxed">
+              Hana is ready to handle your front desk. Choose how you'd like to connect with us.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-5">
+            {/* Primary Choice: Calendar */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-[2rem] blur opacity-25 group-hover:opacity-40 transition duration-500" />
+              <Button 
+                className="relative w-full h-24 md:h-28 rounded-[1.75rem] bg-white border border-border/50 text-foreground shadow-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-between px-6 md:px-8 overflow-hidden group/btn"
+                onClick={() => window.open(CALENDAR_URL, '_blank')}
+              >
+                <div className="flex items-center gap-4 md:gap-6 min-w-0">
+                  <div className="w-12 h-12 md:w-14 md:h-14 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 shrink-0 transition-transform duration-500 group-hover/btn:rotate-6">
+                    <Calendar className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                  </div>
+                  <div className="text-left min-w-0">
+                    <p className="text-xl md:text-2xl font-black tracking-tight mb-1">Book a Demo</p>
+                    <p className="text-[10px] md:text-xs font-semibold text-muted-foreground/70 uppercase tracking-widest">Select a Time Slot</p>
+                  </div>
                 </div>
-                <DialogTitle className="text-2xl font-bold tracking-tight">Select a Time</DialogTitle>
-                <DialogDescription className="text-base text-muted-foreground">
-                  Hana's schedule is synced. Pick a slot that works.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="aspect-[5/4] bg-muted/20 rounded-2xl flex flex-col items-center justify-center border border-border/50 overflow-hidden p-6 text-center">
-                 <Calendar className="w-10 h-10 text-muted-foreground/20 mb-3" />
-                 <p className="text-sm text-muted-foreground mb-5 font-medium">Your external booking calendar will be embedded here.</p>
-                 <Button
-                  variant="outline"
-                  className="rounded-full h-10 px-6 text-sm font-bold border-primary text-primary hover:bg-primary/5 transition-colors"
-                  onClick={() => window.open('https://calendly.com', '_blank')}
-                 >
-                   Open Scheduler
-                 </Button>
+                <ArrowRight className="w-6 h-6 text-primary shrink-0 transition-all duration-300 group-hover/btn:translate-x-2" />
+              </Button>
+            </div>
+
+            <div className="relative py-6 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border/60" />
               </div>
-              <p className="text-[10px] text-center text-muted-foreground/60 mt-6 pb-4 font-medium uppercase tracking-widest">
-                Booking confirmed instantly in our system
-              </p>
-              {/* Keyboard Buffer */}
-              <div className="h-24 sm:hidden" />
+              <span className="relative bg-white px-6 text-[10px] md:text-[11px] font-black text-muted-foreground/30 uppercase tracking-[0.4em]">
+                Direct Line
+              </span>
             </div>
-          )}
+
+            {/* Secondary Choice: Contact Details / Email */}
+            <Button 
+              variant="outline"
+              className="w-full h-auto min-h-[6rem] md:min-h-[7rem] py-4 md:py-0 rounded-[1.75rem] border-2 border-border/40 hover:border-primary/20 hover:bg-muted/20 transition-all duration-300 flex items-center justify-between px-6 md:px-8 group/mail"
+              onClick={() => window.location.href = `mailto:${EMAIL}`}
+            >
+              <div className="flex items-center gap-4 md:gap-6 min-w-0 w-full pr-4">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-muted rounded-2xl flex items-center justify-center shrink-0 transition-all duration-500 group-hover/mail:bg-white group-hover/mail:shadow-xl">
+                  <Mail className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground group-hover/mail:text-primary" />
+                </div>
+                <div className="text-left min-w-0 flex-1">
+                  <p className="text-xl md:text-2xl font-black tracking-tight mb-1">Contact Details</p>
+                  <p className="text-[10px] md:text-xs font-semibold text-muted-foreground/70 break-all leading-tight">
+                    {EMAIL}
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-6 h-6 text-muted-foreground/30 shrink-0 transition-all duration-300 group-hover/mail:translate-x-2 group-hover/mail:text-primary" />
+            </Button>
+            
+            <p className="text-[10px] md:text-[11px] text-center text-muted-foreground/40 mt-12 md:mt-16 font-black uppercase tracking-[0.5em] leading-relaxed">
+              The premium standard in AI Voice
+            </p>
+          </div>
+          
+          {/* Spacing for mobile scrolling */}
+          <div className="h-16 md:hidden" />
         </div>
       </DialogContent>
     </Dialog>

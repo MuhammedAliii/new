@@ -23,7 +23,7 @@ export function Contact() {
             </h2>
 
             <p className="text-base md:text-lg text-white/90 font-medium leading-relaxed transition-all duration-700 ease-in-out group-hover:text-white group-hover:translate-y-[-2px]">
-              Experience the power of Hana with a 7-day free trial. We'll handle your calls and book your patients while you focus on providing care.
+              Book your live strategy session today. See a custom demo of Hana in action and discover how much revenue you can recover. Backed by our 7-Day Performance Guarantee.
             </p>
 
             <div className="flex flex-col items-center gap-4 w-full justify-center pt-2">
@@ -36,7 +36,7 @@ export function Contact() {
                 <span className="absolute inset-0 block w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
                 
                 <span className="relative z-10 flex items-center justify-center">
-                  Try For Free
+                  Book your setup call
                   <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1.5 transition-transform duration-300" />
                 </span>
               </Button>

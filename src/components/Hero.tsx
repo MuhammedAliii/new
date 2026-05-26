@@ -51,14 +51,14 @@ export function Hero() {
         </Button>
       </div>
 
-      <div className={`mt-12 md:mt-20 flex flex-wrap justify-center items-center gap-4 md:gap-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-muted-foreground/30 relative z-10 transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-        <span className="hidden sm:block w-12 md:w-16 h-px bg-border/40" />
+      <div className={`mt-12 md:mt-20 flex flex-wrap justify-center items-center gap-4 md:gap-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-muted-foreground/60 relative z-10 transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <span className="hidden sm:block w-12 md:w-16 h-px bg-border/60" />
         <span className="px-2">Instant Activation</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-border/40 sm:hidden" />
+        <span className="w-1.5 h-1.5 rounded-full bg-border/60 sm:hidden" />
         <span className="px-2">Expert Integration</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-border/40 sm:hidden" />
+        <span className="w-1.5 h-1.5 rounded-full bg-border/60 sm:hidden" />
         <span className="px-2">24/7 Support</span>
-        <span className="hidden sm:block w-12 md:w-16 h-px bg-border/40" />
+        <span className="hidden sm:block w-12 md:w-16 h-px bg-border/60" />
       </div>
 
       <BookingDialog open={isBookingOpen} onOpenChange={setIsBookingOpen} />

@@ -4,7 +4,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { BookingDialog } from "./BookingDialog"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Phone } from "lucide-react"
 
 export function Contact() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
@@ -26,24 +26,33 @@ export function Contact() {
               Book your live strategy session today. See a custom demo of Hana in action and discover how much revenue you can recover. Backed by our 7-Day Performance Guarantee.
             </p>
 
-            <div className="flex flex-col items-center gap-4 w-full justify-center pt-2">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center pt-2">
+              <Button
+                variant="outline"
+                className="relative overflow-hidden rounded-full px-8 md:px-10 h-14 md:h-16 text-lg font-bold bg-white/10 border-white/30 text-white hover:bg-white hover:text-primary shadow-lg transition-all duration-500 w-full sm:w-auto group/call"
+                onClick={() => window.location.href = 'tel:+13109062504'}
+              >
+                <Phone className="w-5 h-5 mr-3 transition-transform group-hover/call:scale-110" />
+                Live AI Demo
+              </Button>
+
               <Button
                 size="lg"
-                className="relative overflow-hidden rounded-full px-8 md:px-12 h-14 md:h-16 text-lg md:text-xl font-bold bg-white text-primary hover:bg-white/95 shadow-xl transition-all duration-500 hover:scale-105 active:scale-95 group/btn w-full sm:w-auto"
+                className="relative overflow-hidden rounded-full px-8 md:px-10 h-14 md:h-16 text-lg font-bold bg-white text-primary hover:bg-white/95 shadow-xl transition-all duration-500 hover:scale-105 active:scale-95 group/btn w-full sm:w-auto"
                 onClick={() => setIsBookingOpen(true)}
               >
                 {/* Premium flashlight sweep effect */}
                 <span className="absolute inset-0 block w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
                 
                 <span className="relative z-10 flex items-center justify-center">
-                  Book your setup call
+                  Book setup call
                   <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1.5 transition-transform duration-300" />
                 </span>
               </Button>
             </div>
             
-            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.25em] text-white/50 transition-all duration-700 group-hover:text-white/70 group-hover:tracking-[0.3em] pt-4">
-              Advanced AI voice technology for professional businesses
+            <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.25em] text-white/60 transition-all duration-700 group-hover:text-white/80 group-hover:tracking-[0.3em] pt-4">
+              Experience Hana Live: +1 (310) 906-2504
             </p>
           </div>
         </div>

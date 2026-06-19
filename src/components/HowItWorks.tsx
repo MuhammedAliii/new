@@ -1,4 +1,3 @@
-
 import { Phone, MessageSquare, CalendarCheck, Clock, Zap, UserCheck, ShieldCheck } from "lucide-react"
 import { Card } from "@/components/ui/card"
 
@@ -11,12 +10,12 @@ const steps = [
   {
     icon: <MessageSquare className="w-6 h-6" />,
     title: "Hana Answers",
-    description: "Hana triages questions and handles bookings with expert professionality. She never gets tired, never gets sick, and never has an 'off' day.",
+    description: "Hana triages questions and handles bookings with expert professionality. Hana never gets tired, never gets sick, and never has an 'off' day.",
   },
   {
     icon: <CalendarCheck className="w-6 h-6" />,
     title: "Your Calendar Fills",
-    description: "Patients book directly into your system. Your front desk arrives to a perfectly organized schedule, even after nights and holidays.",
+    description: "Clients book directly into your system. Your front desk arrives to a perfectly organized schedule, even after nights and holidays.",
   }
 ]
 
@@ -73,17 +72,19 @@ export function HowItWorks() {
         {/* Hana Vitals / Reliability Footer */}
         <div className="mt-16 md:mt-24 pt-12 md:pt-16 border-t border-border/40 flex flex-col items-center gap-8 md:gap-10">
           <p className="text-[10px] font-black uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/80">The Always-On Advantage</p>
-          <div className="grid grid-cols-2 lg:flex lg:flex-wrap justify-center gap-3 md:gap-8 w-full max-w-4xl">
+          
+          <div className="grid grid-cols-2 lg:flex lg:flex-wrap justify-center gap-3 md:gap-8 w-full max-w-6xl mx-auto px-4">
             {vitals.map((vital, idx) => (
               <div 
                 key={idx} 
-                className="flex items-center justify-center md:justify-start gap-3 px-4 py-4 md:px-8 md:py-5 rounded-full bg-white/80 premium-blur ring-1 ring-border shadow-sm text-primary text-[10px] md:text-xs font-extrabold uppercase tracking-widest transition-all duration-300 hover:shadow-xl hover:ring-primary/20 hover:-translate-y-1 hover:bg-white"
+                className="flex items-center justify-center gap-3 px-4 py-4 md:px-8 md:py-5 rounded-full bg-white/80 premium-blur ring-1 ring-border shadow-sm text-primary text-[10px] md:text-xs font-extrabold uppercase tracking-widest transition-all duration-300 hover:shadow-xl hover:ring-primary/20 hover:-translate-y-1 hover:bg-white w-full lg:w-auto"
               >
-                <span className="text-primary">{vital.icon}</span>
-                {vital.text}
+                <span className="text-primary shrink-0">{vital.icon}</span>
+                <span className="whitespace-nowrap">{vital.text}</span>
               </div>
             ))}
           </div>
+
           <div className="flex items-center gap-4 w-full justify-center">
             <div className="hidden sm:block w-12 h-px bg-border/60" />
             <p className="text-xs md:text-sm text-muted-foreground/60 font-semibold italic text-center">

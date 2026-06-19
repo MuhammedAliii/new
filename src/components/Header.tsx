@@ -5,11 +5,13 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { BookingDialog } from "./BookingDialog"
+import { VideoDialog } from "./VideoDialog"
 import Image from "next/image"
 import myLogo from "@/assets/3.png"
 
 export function Header() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -53,6 +55,12 @@ export function Header() {
             <Link href="/#how-it-works" className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-all">
               Process
             </Link>
+            <button 
+              onClick={() => setIsVideoOpen(true)}
+              className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-all"
+            >
+              Live Demo
+            </button>
             <Link href="/#business-impact" className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-all">
               Impact
             </Link>
@@ -72,6 +80,7 @@ export function Header() {
         </div>
       </div>
       <BookingDialog open={isBookingOpen} onOpenChange={setIsBookingOpen} />
+      <VideoDialog open={isVideoOpen} onOpenChange={setIsVideoOpen} />
     </header>
   )
 }

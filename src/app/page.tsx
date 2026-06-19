@@ -6,6 +6,7 @@ import { Header } from "@/components/Header"
 import { Hero } from "@/components/Hero"
 import { ImpactSection } from "@/components/ImpactSection"
 import { HowItWorks } from "@/components/HowItWorks"
+import { VideoCTA } from "@/components/VideoCTA"
 import { Contact } from "@/components/Contact"
 import { Footer } from "@/components/Footer"
 
@@ -40,6 +41,7 @@ export default function Home() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
           <HowItWorks />
         </div>
+        <VideoCTA />
         <ImpactSection />
         <Contact />
       </main>

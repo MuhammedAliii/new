@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -52,7 +51,7 @@ export function BookingDialog({
                     <Phone className="w-6 h-6 md:w-7 md:h-7 text-white" />
                   </div>
                   <div className="text-left min-w-0">
-                    <p className="text-xl md:text-2xl font-black tracking-tight mb-1">Live AI Demo</p>
+                    <p className="text-xl md:text-2xl font-black tracking-tight mb-1">Test Hana Now</p>
                     <p className="text-[10px] md:text-xs font-semibold text-muted-foreground/70 uppercase tracking-widest">Call to Test Now</p>
                   </div>
                 </div>

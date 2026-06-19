@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -33,7 +32,7 @@ export function Contact() {
                 onClick={() => window.location.href = 'tel:+13109062504'}
               >
                 <Phone className="w-5 h-5 mr-3 transition-transform group-hover/call:scale-110" />
-                Live AI Demo
+                Test Hana Now
               </Button>
 
               <Button

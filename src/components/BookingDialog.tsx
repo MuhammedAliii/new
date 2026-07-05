@@ -18,7 +18,7 @@ export function BookingDialog({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const CALENDAR_URL = "https://cal.eu/muhammed.ali/ai"
+  const CALENDAR_URL = "https://calendar.app.google/ZAWxutRfktUA75DX9"
   const EMAIL = "muhammed@bettercallhana.com"
   const PHONE = "+13109062504"
 

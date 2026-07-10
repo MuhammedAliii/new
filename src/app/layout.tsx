@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Better Call Hana | AI Voice Receptionist for Bu',
+  title: 'Better Call Hana | AI Voice Receptionist for Businesses',
   description: 'The premium AI voice receptionist that answers every call and fills your calendar, 24/7.',
 };
 

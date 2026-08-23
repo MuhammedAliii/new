@@ -972,6 +972,26 @@
     }
   }
 
+  var currentAppliedLang = null;
+  var observer = null;
+  var isObserving = false;
+
+  function pauseObserver() {
+    if (observer && isObserving) {
+      observer.disconnect();
+      isObserving = false;
+    }
+  }
+
+  function resumeObserver() {
+    if (observer && !isObserving && document.body) {
+      try {
+        observer.observe(document.body, { childList: true, subtree: true });
+        isObserving = true;
+      } catch (e) {}
+    }
+  }
+
   /**
    * Fast, efficient translation without main thread blocking
    */
@@ -981,6 +1001,9 @@
     }
 
     var dict = translations[lang] || translations[DEFAULT_LANG];
+
+    // Disconnect observer before making DOM modifications to prevent recursion loops
+    pauseObserver();
 
     // Set document lang
     if (document.documentElement.lang !== lang) {
@@ -1037,11 +1060,17 @@
       }
     }
 
-    // Dispatch custom event
-    try {
-      var event = new CustomEvent('languageChanged', { detail: { language: lang, dictionary: dict } });
-      window.dispatchEvent(event);
-    } catch (e) {}
+    // Reconnect observer after DOM modifications are finished
+    resumeObserver();
+
+    // Only dispatch custom event if language actually changed
+    if (currentAppliedLang !== lang) {
+      currentAppliedLang = lang;
+      try {
+        var event = new CustomEvent('languageChanged', { detail: { language: lang, dictionary: dict } });
+        window.dispatchEvent(event);
+      } catch (e) {}
+    }
   }
 
   /**
@@ -1094,7 +1123,7 @@
   // Observe dynamically mounted dialogs with throttled idle execution
   if (typeof MutationObserver !== 'undefined') {
     var observerTimeout = null;
-    var observer = new MutationObserver(function(mutations) {
+    observer = new MutationObserver(function(mutations) {
       var hasRelevantNodes = false;
       for (var m = 0; m < mutations.length; m++) {
         if (mutations[m].addedNodes && mutations[m].addedNodes.length > 0) {
@@ -1105,20 +1134,19 @@
       if (hasRelevantNodes) {
         if (observerTimeout) clearTimeout(observerTimeout);
         observerTimeout = setTimeout(function() {
-          refreshElementCache();
           var currentLang = getSelectedLanguage();
-          translatePage(currentLang);
-        }, 300);
+          if (currentLang && currentLang !== DEFAULT_LANG) {
+            refreshElementCache();
+            translatePage(currentLang);
+          }
+        }, 400);
       }
     });
 
-    if (document.body) {
-      observer.observe(document.body, { childList: true, subtree: true });
-    } else {
+    resumeObserver();
+    if (!isObserving) {
       document.addEventListener('DOMContentLoaded', function() {
-        if (document.body) {
-          observer.observe(document.body, { childList: true, subtree: true });
-        }
+        resumeObserver();
       }, { passive: true, once: true });
     }
   }

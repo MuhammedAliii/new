@@ -111,7 +111,10 @@ export function InteractiveBackground() {
     let time = 0
 
     const render = () => {
-      if (!isRunning) return
+      // Hard JS abort on mobile/small screens
+      if (typeof window !== "undefined" && (window.innerWidth < 768 || !isRunning)) {
+        return
+      }
       time += 0.01
       ctx.clearRect(0, 0, width, height)
 

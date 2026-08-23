@@ -30,10 +30,12 @@ export function Header() {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
+      document.body.style.pointerEvents = "";
     }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
+      document.body.style.pointerEvents = "";
     };
   }, [isMobileMenuOpen]);
 
@@ -42,13 +44,28 @@ export function Header() {
     let ticking = false;
     let scrollRafId: number | null = null;
 
+    const isMobileDevice = () => {
+      return typeof window !== "undefined" && window.innerWidth <= 768;
+    };
+
+    // On mobile devices, header is permanently static and transparent to save CPU & GPU
+    if (isMobileDevice()) {
+      setIsLightSection(false);
+      return;
+    }
+
     const checkScrollPosition = () => {
+      if (isMobileDevice()) {
+        ticking = false;
+        return;
+      }
+
       const scrollY = window.scrollY;
       if (scrollY < 200) {
         setActiveSection("");
       }
 
-      // Dynamically detect if header is currently over a light background section
+      // Dynamically detect if header is currently over a light background section on desktop
       const header = document.getElementById("main-header");
       if (!header) {
         ticking = false;
@@ -95,6 +112,7 @@ export function Header() {
     };
 
     const handleScroll = () => {
+      if (isMobileDevice()) return;
       if (!ticking) {
         ticking = true;
         scrollRafId = window.requestAnimationFrame(checkScrollPosition);
@@ -163,7 +181,7 @@ export function Header() {
     <>
       <header 
         id="main-header"
-        className="fixed top-0 left-0 right-0 w-full z-50 py-4 md:py-7 bg-transparent backdrop-blur-none border-none shadow-none transition-all duration-500 ease-in-out"
+        className="fixed top-0 left-0 right-0 w-full z-50 py-4 md:py-7 bg-transparent backdrop-blur-none border-none shadow-none transition-none md:transition-all md:duration-500 ease-in-out"
         style={{ backgroundColor: 'transparent', border: 'none', boxShadow: 'none', backdropFilter: 'none' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between lg:flex-col lg:items-center gap-2 md:gap-5 relative z-10 transition-all duration-500 ease-in-out">

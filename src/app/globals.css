@@ -330,19 +330,26 @@
 
   /* Replace translucent glass effects with solid, high-opacity premium colors */
   [data-radix-dialog-overlay] {
-    background-color: rgba(4, 13, 24, 0.95) !important;
+    background-color: rgba(5, 12, 22, 0.98) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   [data-radix-dialog-content],
   [role="dialog"] {
     background-color: #071626 !important;
     background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   #main-header {
     background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border: none !important;
     box-shadow: none !important;
+    transition: none !important;
   }
 
   #mobile-nav-overlay,

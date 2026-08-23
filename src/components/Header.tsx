@@ -398,28 +398,24 @@ export function Header() {
         </div>
       </header>
 
-      {/* Luxury Full-Screen Glassmorphism Mobile Navigation Overlay */}
+      {/* Mobile Navigation Overlay */}
       <div 
         id="mobile-nav-overlay"
-        className={`fixed inset-0 z-40 lg:hidden transition-all duration-500 ease-in-out ${
+        className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-150 ease-in-out ${
           isMobileMenuOpen 
             ? "opacity-100 pointer-events-auto" 
             : "opacity-0 pointer-events-none"
         }`}
       >
-        {/* Backdrop glass overlay */}
+        {/* Solid Backdrop overlay */}
         <div 
-          className="absolute inset-0 bg-[#061220]/90 backdrop-blur-2xl transition-opacity duration-500"
+          className="absolute inset-0 bg-[#061220] transition-opacity duration-150"
           onClick={() => setIsMobileMenuOpen(false)}
         />
 
-        {/* Ambient atmospheric glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[300px] h-[300px] bg-gradient-to-b from-cyan-500/20 via-sky-500/10 to-transparent rounded-full blur-[90px] pointer-events-none" />
-        <div className="absolute bottom-10 right-0 w-[250px] h-[250px] bg-teal-400/15 rounded-full blur-[80px] pointer-events-none" />
-
         {/* Menu Content Container */}
-        <div className={`relative z-50 flex flex-col justify-between h-full pt-28 pb-10 px-6 sm:px-8 transition-transform duration-500 ease-out ${
-          isMobileMenuOpen ? "translate-y-0" : "-translate-y-6"
+        <div className={`relative z-50 flex flex-col justify-between h-full pt-28 pb-10 px-6 sm:px-8 transition-transform duration-150 ease-out ${
+          isMobileMenuOpen ? "translate-y-0" : "-translate-y-4"
         }`}>
           {/* Main Navigation Links */}
           <div className="flex flex-col gap-3 sm:gap-4 max-w-sm mx-auto w-full">
@@ -444,7 +440,7 @@ export function Header() {
               id="mobile-nav-process"
               data-i18n="nav.process"
               onClick={(e) => handleNavClick(e, "how-it-works")}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
                 activeSection === "how-it-works"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"
@@ -459,7 +455,7 @@ export function Header() {
               id="mobile-nav-services"
               data-i18n="nav.services"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
                 isServicesPage
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"
@@ -479,7 +475,7 @@ export function Header() {
                 setIsMobileMenuOpen(false);
                 setIsVideoOpen(true);
               }}
-              className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 hover:bg-white/[0.08] transition-all duration-300 active:scale-[0.98] text-left cursor-pointer"
+              className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 hover:bg-white/[0.08] transition-colors duration-150 active:scale-[0.98] text-left cursor-pointer"
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.liveDemo', 'Live Demo')}</span>
               <span className="text-xs text-cyan-400/70 font-mono">03</span>
@@ -490,7 +486,7 @@ export function Header() {
               id="mobile-nav-impact"
               data-i18n="nav.impact"
               onClick={(e) => handleNavClick(e, "business-impact")}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
                 activeSection === "business-impact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"
@@ -505,7 +501,7 @@ export function Header() {
               id="mobile-nav-contact"
               data-i18n="nav.contact"
               onClick={(e) => handleNavClick(e, "contact")}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
                 activeSection === "contact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"

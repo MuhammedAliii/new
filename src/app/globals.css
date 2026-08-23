@@ -306,4 +306,61 @@
     padding-right: 1.1rem !important;
     min-height: 2rem !important;
   }
+
+  /* 6. CRITICAL MOBILE GPU PROTECTION: Disable all backdrop-filter on mobile */
+  *,
+  *::before,
+  *::after,
+  [class*="backdrop-blur"],
+  [class*="backdrop-filter"],
+  .premium-blur,
+  #main-header,
+  #mobile-nav-overlay,
+  #mobile-nav-overlay > div,
+  #language-dropdown-menu,
+  [data-radix-dialog-overlay],
+  [data-radix-dialog-content],
+  [data-radix-popper-content-wrapper],
+  [role="dialog"],
+  [role="alertdialog"],
+  [role="menu"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Replace translucent glass effects with solid, high-opacity premium colors */
+  [data-radix-dialog-overlay] {
+    background-color: rgba(4, 13, 24, 0.95) !important;
+  }
+
+  [data-radix-dialog-content],
+  [role="dialog"] {
+    background-color: #071626 !important;
+    background-image: none !important;
+  }
+
+  #main-header {
+    background-color: rgba(7, 19, 34, 0.98) !important;
+  }
+
+  #mobile-nav-overlay,
+  #mobile-nav-overlay > div:first-child {
+    background-color: rgba(6, 18, 32, 0.98) !important;
+  }
+
+  #language-dropdown-menu {
+    background-color: #071729 !important;
+  }
+
+  /* Completely disable high-radius heavy blur circles on mobile */
+  #mobile-nav-overlay .blur-\[90px\],
+  #mobile-nav-overlay .blur-\[80px\],
+  [role="dialog"] .blur-\[70px\],
+  [role="dialog"] .blur-\[60px\],
+  [role="dialog"] .blur-\[80px\],
+  [role="dialog"] .blur-\[90px\],
+  .blur-\[100px\],
+  .blur-\[120px\] {
+    display: none !important;
+  }
 }

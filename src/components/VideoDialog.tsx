@@ -104,7 +104,7 @@ export function VideoDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw] sm:w-[90%] max-w-[540px] rounded-[24px] p-0 border border-cyan-500/30 shadow-[0_30px_100px_-15px_rgba(2,8,16,0.95)] overflow-hidden bg-gradient-to-b from-[#08182b] via-[#091f35] to-[#061423] backdrop-blur-3xl text-white">
+      <DialogContent className="w-[90vw] sm:w-[90%] max-w-[540px] rounded-[24px] p-0 border border-cyan-500/30 shadow-[0_30px_100px_-15px_rgba(2,8,16,0.95)] overflow-hidden bg-[#08182b] md:bg-gradient-to-b md:from-[#08182b] md:via-[#091f35] md:to-[#061423] md:backdrop-blur-3xl text-white">
         {/* Real Audio element configured with stream endpoint */}
         <audio 
           ref={audioRef} 
@@ -119,7 +119,7 @@ export function VideoDialog({
         />
 
         {/* Ambient Holographic Radial Glow */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="hidden md:block absolute inset-0 pointer-events-none overflow-hidden z-0">
           <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-gradient-to-bl from-cyan-400/20 via-teal-400/10 to-transparent rounded-full blur-[70px]" />
           <div className="absolute bottom-0 left-0 w-[260px] h-[260px] bg-teal-500/15 rounded-full blur-[70px]" />
         </div>
@@ -127,7 +127,7 @@ export function VideoDialog({
         {/* Precision Structured Grid Container */}
         <div className="relative z-10 p-5 sm:p-7 flex flex-col gap-4 sm:gap-5">
           {/* Header Card: Anchored, Balanced, High-Contrast */}
-          <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-white/[0.04] border border-cyan-400/20 backdrop-blur-md">
+          <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-white/[0.04] border border-cyan-400/20 md:backdrop-blur-md">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.35)] shrink-0">
                 <Activity className="w-4 h-4 text-slate-950" />

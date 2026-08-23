@@ -931,8 +931,49 @@
     return DEFAULT_LANG;
   }
 
+  // Cached collections to prevent expensive repeated document.querySelectorAll
+  var cachedElements = null;
+  var cachedPlaceholders = null;
+  var cachedTitles = null;
+
+  function refreshElementCache() {
+    cachedElements = [];
+    var els = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      var key = el.getAttribute('data-i18n');
+      if (key) {
+        cachedElements.push({
+          el: el,
+          key: key,
+          isInput: (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')
+        });
+      }
+    }
+
+    cachedPlaceholders = [];
+    var pEls = document.querySelectorAll('[data-i18n-placeholder]');
+    for (var p = 0; p < pEls.length; p++) {
+      var pEl = pEls[p];
+      var pKey = pEl.getAttribute('data-i18n-placeholder');
+      if (pKey) {
+        cachedPlaceholders.push({ el: pEl, key: pKey });
+      }
+    }
+
+    cachedTitles = [];
+    var tEls = document.querySelectorAll('[data-i18n-title]');
+    for (var t = 0; t < tEls.length; t++) {
+      var tEl = tEls[t];
+      var tKey = tEl.getAttribute('data-i18n-title');
+      if (tKey) {
+        cachedTitles.push({ el: tEl, key: tKey });
+      }
+    }
+  }
+
   /**
-   * Translate all elements on the page marked with data-i18n, data-i18n-placeholder, data-i18n-title
+   * Fast, efficient translation without main thread blocking
    */
   function translatePage(lang) {
     if (!lang || SUPPORTED_LANGUAGES.indexOf(lang) === -1) {
@@ -942,63 +983,65 @@
     var dict = translations[lang] || translations[DEFAULT_LANG];
 
     // Set document lang
-    document.documentElement.lang = lang;
-    document.documentElement.dir = 'ltr';
-
-    // Remove any leftover RTL classes
-    document.documentElement.classList.remove('rtl-active');
-    if (document.body) {
-      document.body.classList.remove('rtl-active');
+    if (document.documentElement.lang !== lang) {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = 'ltr';
     }
 
-    // 1. Find all elements with data-i18n
-    var elements = document.querySelectorAll('[data-i18n]');
-    for (var i = 0; i < elements.length; i++) {
-      var el = elements[i];
-      var key = el.getAttribute('data-i18n');
-      if (key && dict[key]) {
-        // If element is an input/textarea with placeholder and not explicitly tagged with data-i18n-placeholder
-        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-          if (el.hasAttribute('placeholder') && !el.hasAttribute('data-i18n-placeholder')) {
-            el.setAttribute('placeholder', dict[key]);
-            el.placeholder = dict[key];
+    // Initialize or validate cached elements
+    if (!cachedElements || cachedElements.length === 0) {
+      refreshElementCache();
+    }
+
+    // 1. Update text nodes efficiently (only write if text changed to avoid layout reflows)
+    if (cachedElements) {
+      for (var i = 0; i < cachedElements.length; i++) {
+        var item = cachedElements[i];
+        var el = item.el;
+        var targetText = dict[item.key];
+        if (targetText && el.isConnected) {
+          if (item.isInput) {
+            if (el.hasAttribute('placeholder') && !el.hasAttribute('data-i18n-placeholder')) {
+              if (el.placeholder !== targetText) {
+                el.placeholder = targetText;
+              }
+            }
+          } else {
+            if (el.textContent !== targetText) {
+              el.textContent = targetText;
+            }
           }
-        } else {
-          // Standard text replacement
-          el.textContent = dict[key];
         }
       }
     }
 
-    // 2. Find all elements with data-i18n-placeholder
-    var placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
-    for (var p = 0; p < placeholderElements.length; p++) {
-      var pEl = placeholderElements[p];
-      var pKey = pEl.getAttribute('data-i18n-placeholder');
-      if (pKey && dict[pKey]) {
-        pEl.setAttribute('placeholder', dict[pKey]);
-        pEl.placeholder = dict[pKey];
+    // 2. Update placeholders
+    if (cachedPlaceholders) {
+      for (var p = 0; p < cachedPlaceholders.length; p++) {
+        var pItem = cachedPlaceholders[p];
+        var pTarget = dict[pItem.key];
+        if (pTarget && pItem.el.isConnected && pItem.el.placeholder !== pTarget) {
+          pItem.el.placeholder = pTarget;
+        }
       }
     }
 
-    // 3. Find all elements with data-i18n-title
-    var titleElements = document.querySelectorAll('[data-i18n-title]');
-    for (var t = 0; t < titleElements.length; t++) {
-      var tEl = titleElements[t];
-      var tKey = tEl.getAttribute('data-i18n-title');
-      if (tKey && dict[tKey]) {
-        tEl.setAttribute('title', dict[tKey]);
-        tEl.title = dict[tKey];
+    // 3. Update titles
+    if (cachedTitles) {
+      for (var t = 0; t < cachedTitles.length; t++) {
+        var tItem = cachedTitles[t];
+        var tTarget = dict[tItem.key];
+        if (tTarget && tItem.el.isConnected && tItem.el.title !== tTarget) {
+          tItem.el.title = tTarget;
+        }
       }
     }
 
-    // Dispatch a custom event for React components or third-party listeners
+    // Dispatch custom event
     try {
       var event = new CustomEvent('languageChanged', { detail: { language: lang, dictionary: dict } });
       window.dispatchEvent(event);
-    } catch (e) {
-      // Fallback for older browsers
-    }
+    } catch (e) {}
   }
 
   /**
@@ -1012,9 +1055,7 @@
     try {
       localStorage.setItem(STORAGE_KEY, lang);
       localStorage.setItem(BACKUP_KEY, lang);
-    } catch (e) {
-      console.warn('localStorage write error:', e);
-    }
+    } catch (e) {}
 
     translatePage(lang);
   }
@@ -1033,43 +1074,41 @@
     getLanguage: getSelectedLanguage,
     setLanguage: setLanguage,
     translatePage: translatePage,
-    updateLanguage: updateLanguage
+    updateLanguage: updateLanguage,
+    refreshCache: refreshElementCache
   };
 
-  // Immediate execution on DOMContentLoaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      var initialLang = getSelectedLanguage();
-      translatePage(initialLang);
-    });
-  } else {
+  // Run initial translation when idle or ready
+  var runInitialTranslate = function() {
+    refreshElementCache();
     var initialLang = getSelectedLanguage();
     translatePage(initialLang);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runInitialTranslate, { passive: true, once: true });
+  } else {
+    runInitialTranslate();
   }
 
-  // Additional listener on full window load to capture dynamic elements
-  window.addEventListener('load', function() {
-    var lang = getSelectedLanguage();
-    translatePage(lang);
-  });
-
-  // Observe DOM additions (e.g. Radix UI / shadcn Dialog portals dynamically inserted into body)
+  // Observe dynamically mounted dialogs with throttled idle execution
   if (typeof MutationObserver !== 'undefined') {
     var observerTimeout = null;
     var observer = new MutationObserver(function(mutations) {
-      var shouldTranslate = false;
+      var hasRelevantNodes = false;
       for (var m = 0; m < mutations.length; m++) {
         if (mutations[m].addedNodes && mutations[m].addedNodes.length > 0) {
-          shouldTranslate = true;
+          hasRelevantNodes = true;
           break;
         }
       }
-      if (shouldTranslate) {
+      if (hasRelevantNodes) {
         if (observerTimeout) clearTimeout(observerTimeout);
         observerTimeout = setTimeout(function() {
+          refreshElementCache();
           var currentLang = getSelectedLanguage();
           translatePage(currentLang);
-        }, 10);
+        }, 300);
       }
     });
 
@@ -1080,7 +1119,7 @@
         if (document.body) {
           observer.observe(document.body, { childList: true, subtree: true });
         }
-      });
+      }, { passive: true, once: true });
     }
   }
 

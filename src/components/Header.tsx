@@ -39,7 +39,10 @@ export function Header() {
 
   useEffect(() => {
     setIsVisible(true);
-    const handleScroll = () => {
+    let ticking = false;
+    let scrollRafId: number | null = null;
+
+    const checkScrollPosition = () => {
       const scrollY = window.scrollY;
       if (scrollY < 200) {
         setActiveSection("");
@@ -47,7 +50,10 @@ export function Header() {
 
       // Dynamically detect if header is currently over a light background section
       const header = document.getElementById("main-header");
-      if (!header) return;
+      if (!header) {
+        ticking = false;
+        return;
+      }
       const headerRect = header.getBoundingClientRect();
       const headerMidY = headerRect.top + headerRect.height / 2;
 
@@ -59,7 +65,6 @@ export function Header() {
       let isLight = false;
       if (howItWorks) {
         const r = howItWorks.getBoundingClientRect();
-        // HowItWorks transitions from dark at top to light after ~35%
         const lightStart = r.top + r.height * 0.35;
         if (headerMidY >= lightStart && headerMidY < r.bottom) {
           isLight = true;
@@ -79,7 +84,6 @@ export function Header() {
       }
       if (contact) {
         const r = contact.getBoundingClientRect();
-        // Contact is light in its top ~45% before transitioning to dark navy
         const lightEnd = r.top + r.height * 0.45;
         if (headerMidY >= r.top && headerMidY < lightEnd) {
           isLight = true;
@@ -87,9 +91,17 @@ export function Header() {
       }
 
       setIsLightSection(isLight);
+      ticking = false;
     };
 
-    handleScroll();
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        scrollRafId = window.requestAnimationFrame(checkScrollPosition);
+      }
+    };
+
+    checkScrollPosition();
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     // ScrollSpy observer setup for sections
@@ -115,6 +127,9 @@ export function Header() {
     sections.forEach((section) => observer.observe(section));
 
     return () => {
+      if (scrollRafId !== null) {
+        window.cancelAnimationFrame(scrollRafId);
+      }
       window.removeEventListener("scroll", handleScroll);
       sections.forEach((section) => observer.unobserve(section));
       observer.disconnect();

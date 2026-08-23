@@ -92,10 +92,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         document.body.classList.remove('rtl-active');
       }
 
-      // Also call global vanilla DOM translator if available
-      const win = window as unknown as { BetterCallHanaI18n?: { translatePage: (l: string) => void } };
-      if (win.BetterCallHanaI18n && typeof win.BetterCallHanaI18n.translatePage === 'function') {
-        win.BetterCallHanaI18n.translatePage(newLang);
+      // Asynchronously update any external DOM nodes without blocking user interactions
+      if (typeof window !== 'undefined') {
+        window.requestAnimationFrame(() => {
+          const win = window as unknown as { BetterCallHanaI18n?: { translatePage: (l: string) => void } };
+          if (win.BetterCallHanaI18n && typeof win.BetterCallHanaI18n.translatePage === 'function') {
+            win.BetterCallHanaI18n.translatePage(newLang);
+          }
+        });
       }
     }
   }, []);

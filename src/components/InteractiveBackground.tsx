@@ -35,16 +35,25 @@ export function InteractiveBackground() {
     targetX: -1000,
     targetY: -1000,
     isActive: false,
-    radius: 85, // Refined, focused interaction radius
+    radius: 85,
   })
 
   useEffect(() => {
-    // 1. Disable Canvas Background on Mobile to eliminate CPU load and render instantly
+    // 1. Completely terminate canvas animation and physics on mobile/touch devices
     if (typeof window === "undefined") return
-    const isMobileDevice = () => window.innerWidth < 768 || window.matchMedia("(max-width: 767px)").matches
 
-    if (isMobileDevice()) {
-      return // Abort initialization on mobile screens
+    const isMobileOrTouch = () => {
+      const isSmallScreen = window.innerWidth <= 768 || window.matchMedia("(max-width: 768px)").matches
+      const isTouch = 
+        'ontouchstart' in window || 
+        (typeof navigator !== 'undefined' && (navigator.maxTouchPoints > 0 || (navigator as unknown as { msMaxTouchPoints?: number }).msMaxTouchPoints! > 0)) ||
+        (window.matchMedia && window.matchMedia("(pointer: coarse)").matches)
+      return isSmallScreen || isTouch
+    }
+
+    // Abort completely on mobile and touch screens to eliminate CPU load
+    if (isMobileOrTouch()) {
+      return
     }
 
     const canvas = canvasRef.current
@@ -59,8 +68,9 @@ export function InteractiveBackground() {
     let dpr = 1
     let particles: Particle[] = []
     let isRunning = false
+    let isMouseListenersAttached = false
 
-    // Palette with refined, serene luminous tones
+    // Palette with luminous tones
     const colors = [
       "255, 255, 255", // Subtle Pure White
       "56, 189, 248",  // Soft Sky Blue
@@ -216,34 +226,6 @@ export function InteractiveBackground() {
       }
     }
 
-    const handleResize = () => {
-      if (!canvas) return
-
-      // Abort if resized below desktop breakpoint
-      if (isMobileDevice()) {
-        if (animationFrameId !== null) {
-          cancelAnimationFrame(animationFrameId)
-          animationFrameId = null
-        }
-        isRunning = false
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        return
-      }
-
-      dpr = Math.min(window.devicePixelRatio || 1, 2)
-      width = window.innerWidth
-      height = window.innerHeight
-      canvas.width = width * dpr
-      canvas.height = height * dpr
-      ctx.scale(dpr, dpr)
-      initParticles()
-
-      if (!isRunning) {
-        isRunning = true
-        animationFrameId = requestAnimationFrame(render)
-      }
-    }
-
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current.targetX = e.clientX
       mouseRef.current.targetY = e.clientY
@@ -254,10 +236,54 @@ export function InteractiveBackground() {
       mouseRef.current.isActive = false
     }
 
-    window.addEventListener("resize", handleResize, { passive: true })
-    window.addEventListener("mousemove", handleMouseMove, { passive: true })
-    document.addEventListener("mouseleave", handleMouseLeave, { passive: true })
+    const attachMouseListeners = () => {
+      if (!isMouseListenersAttached && !isMobileOrTouch()) {
+        window.addEventListener("mousemove", handleMouseMove, { passive: true })
+        document.addEventListener("mouseleave", handleMouseLeave, { passive: true })
+        isMouseListenersAttached = true
+      }
+    }
 
+    const detachMouseListeners = () => {
+      if (isMouseListenersAttached) {
+        window.removeEventListener("mousemove", handleMouseMove)
+        document.removeEventListener("mouseleave", handleMouseLeave)
+        isMouseListenersAttached = false
+      }
+    }
+
+    const handleResize = () => {
+      if (!canvas) return
+
+      // Terminate loop and kill physics if screen width drops or on touch device
+      if (isMobileOrTouch()) {
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId)
+          animationFrameId = null
+        }
+        isRunning = false
+        particles = []
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        detachMouseListeners()
+        return
+      }
+
+      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      width = window.innerWidth
+      height = window.innerHeight
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.scale(dpr, dpr)
+      initParticles()
+      attachMouseListeners()
+
+      if (!isRunning) {
+        isRunning = true
+        animationFrameId = requestAnimationFrame(render)
+      }
+    }
+
+    window.addEventListener("resize", handleResize, { passive: true })
     handleResize()
 
     return () => {
@@ -265,17 +291,17 @@ export function InteractiveBackground() {
         cancelAnimationFrame(animationFrameId)
       }
       isRunning = false
+      particles = []
       window.removeEventListener("resize", handleResize)
-      window.removeEventListener("mousemove", handleMouseMove)
-      document.removeEventListener("mouseleave", handleMouseLeave)
+      detachMouseListeners()
     }
   }, [])
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[60] overflow-hidden hidden md:block">
+    <div className="fixed inset-0 pointer-events-none z-[60] overflow-hidden hidden md:block" aria-hidden="true">
       <canvas
         ref={canvasRef}
-        className="w-full h-full block"
+        className="w-full h-full block pointer-events-none"
         style={{ pointerEvents: "none" }}
       />
     </div>

@@ -42,7 +42,8 @@ export default function RootLayout({
           <InteractiveBackground />
           {children}
         </LanguageProvider>
-        <Script src="/js/language.js" strategy="afterInteractive" />
+        {/* Defer Non-Critical JavaScript to paint visual website instantly */}
+        <Script src="/js/language.js" strategy="lazyOnload" defer />
       </body>
     </html>
   );

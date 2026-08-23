@@ -30,6 +30,7 @@ export function Footer() {
                 src={myLogo} 
                 alt="Better Call Hana" 
                 fill
+                loading="lazy"
                 className="object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-all duration-500 drop-shadow-[0_2px_12px_rgba(34,211,238,0.25)]"
               />
             </div>

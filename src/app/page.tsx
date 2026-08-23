@@ -25,7 +25,6 @@ export default function Home() {
   return (
     <div className="relative flex flex-col min-h-screen selection:bg-primary selection:text-white overflow-x-hidden bg-[#071322]">
       {/* Universal Premium Background Layers */}
-      <InteractiveBackground />
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-grid opacity-20" />
         <div className="absolute inset-0 bg-noise opacity-30" />

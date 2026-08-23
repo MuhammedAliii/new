@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  @font-face {
+    font-family: 'Inter';
+    font-display: swap;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 12%;
@@ -23,17 +28,21 @@
     --border: 199 20% 92%;
     --input: 199 20% 92%;
     --ring: 176 80% 36%;
-    --radius: 1.25rem;
+    --radius: 1.5rem;
   }
 }
 
 @layer base {
-  * {
+  /* 1. Universal Box-Sizing & Boundary Containment */
+  *, *::before, *::after {
+    box-sizing: border-box;
     @apply border-border;
   }
 
   html {
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
     scroll-behavior: smooth;
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
@@ -42,25 +51,59 @@
   body {
     @apply bg-background text-foreground font-body;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
     min-height: 100vh;
+    position: relative;
   }
 
-  /* 2. Safe Word Breaking (The 'German' Fix) & Adaptive Typography */
+  /* Universal Media & Control Bounds */
+  img, svg, video, canvas, audio, iframe {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  input, textarea, select, button {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 2. Refined Fluid Typography with CSS clamp() for narrow mobile to 4K displays */
+  h1 {
+    font-size: clamp(1.45rem, 5vw + 0.25rem, 4rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  h2 {
+    font-size: clamp(1.25rem, 3.5vw + 0.2rem, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  h3 {
+    font-size: clamp(1.05rem, 2vw + 0.15rem, 1.75rem);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  /* 3. Universal Text-Wrapping & Break Word Guarantees */
   h1, h2, h3, h4, h5, h6,
   p, span, a, button, label, input, textarea, select,
-  [data-i18n], .btn, [role="button"], li, blockquote {
+  [data-i18n], .btn, [role="button"], li, blockquote, div {
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: normal;
   }
 
-  /* Ensure headings and content break gracefully without cutting off */
-  h1, h2, h3, h4, h5, h6 {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-  }
-
-  /* 1. Elastic Button Architecture Global Defaults */
+  /* Elastic Button Architecture Global Defaults */
   button, 
   [role="button"], 
   .btn, 
@@ -69,21 +112,93 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
     height: auto;
+    max-width: 100%;
+  }
+
+  /* 4. The Flexbox & Grid Overflow Fix (min-width: 0; min-height: 0;) */
+  .grid > *,
+  .flex > *,
+  [class*="grid-"] > *,
+  [class*="flex-"] > *,
+  .adaptive-grid > *,
+  .grid-responsive-3 > *,
+  .grid-responsive-2 > * {
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
   }
 }
 
-/* 3. Flexible Grids & Flexbox Containment */
+/* Fluid Layouts, Grids & Responsive Utilities */
 @layer utilities {
+  /* Fluid Section Spacing with mobile-safe clamp() */
+  .fluid-py-section {
+    padding-top: clamp(3.5rem, 7vw, 8rem);
+    padding-bottom: clamp(3.5rem, 7vw, 8rem);
+  }
+
+  .fluid-py-hero {
+    padding-top: clamp(5.5rem, 10vw, 10rem);
+    padding-bottom: clamp(3.5rem, 6vw, 6.5rem);
+  }
+
+  .fluid-px-container {
+    padding-left: clamp(1rem, 4vw, 2.5rem);
+    padding-right: clamp(1rem, 4vw, 2.5rem);
+  }
+
+  .fluid-gap-grid {
+    gap: clamp(1rem, 2.5vw, 2.25rem);
+  }
+
+  /* Mobile-optimized card padding helper */
+  .card-fluid-padding {
+    padding: clamp(1.25rem, 3.5vw, 2.25rem);
+  }
+
+  /* Adaptive Grid System: 1-col (Mobile) -> 2-col (Tablet) -> 3-col (Desktop) */
+  .grid-responsive-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.25rem, 2.5vw, 2.25rem);
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .grid-responsive-3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grid-responsive-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Adaptive 2-Column Grid: 1-col (Mobile) -> 2-col (Tablet/Desktop) */
+  .grid-responsive-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  @media (min-width: 768px) {
+    .grid-responsive-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Fluid Modal Card Utility */
+  .modal-fluid-card {
+    width: min(90vw, 420px) !important;
+    max-width: 420px !important;
+    border-radius: 24px !important;
+  }
+
   /* Prevent any grid child from stretching grid container beyond viewport */
   .adaptive-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 0), 1fr));
-  }
-
-  /* Ensure flex & grid items respect parent width and can wrap */
-  .grid > * {
-    min-width: 0;
-    max-width: 100%;
   }
 
   .flex-adaptive {
@@ -102,6 +217,7 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.35;
+    max-width: 100%;
   }
 
   .bg-dot-grid {
@@ -125,5 +241,69 @@
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Infinite Smooth Orbital Rotation Animation */
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-orbit-spin {
+    animation: spin 50s linear infinite;
+  }
+
+  .animate-orbit-spin-reverse {
+    animation: spin 100s linear infinite reverse;
+  }
+}
+
+/* 5. Mobile screens (max-width: 768px) layout safety & breathing room */
+@media (max-width: 768px) {
+  section {
+    padding-left: clamp(1rem, 4vw, 1.5rem);
+    padding-right: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  /* Prevent card padding from squishing text on mobile */
+  .glass-card,
+  [class*="rounded-[2."],
+  [class*="rounded-[3."] {
+    padding-left: clamp(1.15rem, 4vw, 1.5rem);
+    padding-right: clamp(1.15rem, 4vw, 1.5rem);
+  }
+
+  /* Mobile Hero Eclipse specific downscaling & containment */
+  .hero-eclipse-content {
+    width: 82% !important;
+    max-width: 275px !important;
+    gap: 0.5rem !important;
+  }
+
+  .hero-eclipse-content h1 {
+    font-size: clamp(1.15rem, 5.2vw, 1.65rem) !important;
+    line-height: 1.12 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .hero-eclipse-content p {
+    font-size: clamp(0.68rem, 2.5vw, 0.82rem) !important;
+    line-height: 1.25 !important;
+    max-width: 230px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .hero-eclipse-content .btn,
+  .hero-eclipse-content button {
+    font-size: 0.72rem !important;
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+    padding-left: 1.1rem !important;
+    padding-right: 1.1rem !important;
+    min-height: 2rem !important;
   }
 }

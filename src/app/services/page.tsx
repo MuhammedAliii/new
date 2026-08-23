@@ -7,7 +7,6 @@ import { ServicesWhyUs } from "@/components/ServicesWhyUs"
 import { ServicesCoreFeatures } from "@/components/ServicesCoreFeatures"
 import { ServicesCrossSellBanner } from "@/components/ServicesCrossSellBanner"
 import { Footer } from "@/components/Footer"
-import { InteractiveBackground } from "@/components/InteractiveBackground"
 
 export default function ServicesPage() {
   useEffect(() => {
@@ -20,7 +19,7 @@ export default function ServicesPage() {
   }, []);
 
   return (
-    <div className="relative flex flex-col min-h-screen selection:bg-primary selection:text-white overflow-x-hidden bg-[#071322]">
+    <div className="main-page-wrapper relative z-10 flex flex-col min-h-screen selection:bg-primary selection:text-white overflow-x-hidden bg-transparent md:bg-[#071322]">
       {/* Universal Premium Atmospheric Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-grid opacity-20" />

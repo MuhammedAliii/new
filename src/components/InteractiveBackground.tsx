@@ -286,16 +286,26 @@ export function InteractiveBackground() {
       }
     }
 
-    window.addEventListener("resize", handleResize, { passive: true })
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    const debouncedResize = () => {
+      if (isMobileOrTouch()) return;
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        handleResize();
+      }, 150);
+    };
+
+    window.addEventListener("resize", debouncedResize, { passive: true })
     handleResize()
 
     return () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
       if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId)
       }
       isRunning = false
       particles = []
-      window.removeEventListener("resize", handleResize)
+      window.removeEventListener("resize", debouncedResize)
       detachMouseListeners()
     }
   }, [])

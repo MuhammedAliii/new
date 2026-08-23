@@ -419,22 +419,26 @@ export function Header() {
       {/* Mobile Navigation Overlay */}
       <div 
         id="mobile-nav-overlay"
-        className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-150 ease-in-out ${
+        className={`fixed inset-0 z-40 lg:hidden ${
           isMobileMenuOpen 
-            ? "opacity-100 pointer-events-auto" 
-            : "opacity-0 pointer-events-none"
+            ? "block opacity-100 pointer-events-auto" 
+            : "hidden opacity-0 pointer-events-none"
         }`}
       >
         {/* Solid Backdrop overlay */}
         <div 
-          className="absolute inset-0 bg-[#061220] transition-opacity duration-150"
-          onClick={() => setIsMobileMenuOpen(false)}
+          className="absolute inset-0 bg-[#061220]"
+          onClick={() => {
+            setIsMobileMenuOpen(false);
+            if (typeof document !== 'undefined') {
+              document.body.style.overflow = '';
+              document.body.style.pointerEvents = '';
+            }
+          }}
         />
 
         {/* Menu Content Container */}
-        <div className={`relative z-50 flex flex-col justify-between h-full pt-28 pb-10 px-6 sm:px-8 transition-transform duration-150 ease-out ${
-          isMobileMenuOpen ? "translate-y-0" : "-translate-y-4"
-        }`}>
+        <div className="relative z-50 flex flex-col justify-between h-full pt-28 pb-10 px-6 sm:px-8">
           {/* Main Navigation Links */}
           <div className="flex flex-col gap-3 sm:gap-4 max-w-sm mx-auto w-full">
             <div className="flex items-center justify-between px-2 mb-1">
@@ -458,10 +462,10 @@ export function Header() {
               id="mobile-nav-process"
               data-i18n="nav.process"
               onClick={(e) => handleNavClick(e, "how-it-works")}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 activeSection === "how-it-works"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
-                  : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"
+                  : "bg-white/[0.04] border-white/10 text-slate-100"
               }`}
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.process', 'Process')}</span>
@@ -472,11 +476,17 @@ export function Header() {
               href="/services"
               id="mobile-nav-services"
               data-i18n="nav.services"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                if (typeof document !== 'undefined') {
+                  document.body.style.overflow = '';
+                  document.body.style.pointerEvents = '';
+                }
+              }}
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 isServicesPage
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
-                  : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"
+                  : "bg-white/[0.04] border-white/10 text-slate-100"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -491,9 +501,13 @@ export function Header() {
               data-i18n="nav.liveDemo"
               onClick={() => {
                 setIsMobileMenuOpen(false);
+                if (typeof document !== 'undefined') {
+                  document.body.style.overflow = '';
+                  document.body.style.pointerEvents = '';
+                }
                 setIsVideoOpen(true);
               }}
-              className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 hover:bg-white/[0.08] transition-colors duration-150 active:scale-[0.98] text-left cursor-pointer"
+              className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 transition-none active:scale-[0.98] text-left cursor-pointer"
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.liveDemo', 'Live Demo')}</span>
               <span className="text-xs text-cyan-400/70 font-mono">03</span>
@@ -504,10 +518,10 @@ export function Header() {
               id="mobile-nav-impact"
               data-i18n="nav.impact"
               onClick={(e) => handleNavClick(e, "business-impact")}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 activeSection === "business-impact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
-                  : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"
+                  : "bg-white/[0.04] border-white/10 text-slate-100"
               }`}
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.impact', 'Impact')}</span>
@@ -519,10 +533,10 @@ export function Header() {
               id="mobile-nav-contact"
               data-i18n="nav.contact"
               onClick={(e) => handleNavClick(e, "contact")}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-colors duration-150 active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 activeSection === "contact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
-                  : "bg-white/[0.04] border-white/10 text-slate-100 hover:bg-white/[0.08]"
+                  : "bg-white/[0.04] border-white/10 text-slate-100"
               }`}
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.contact', 'Contact')}</span>

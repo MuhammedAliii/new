@@ -82,6 +82,15 @@ const DialogContent = React.forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      onOpenAutoFocus={(e) => {
+        e.preventDefault();
+        props.onOpenAutoFocus?.(e);
+      }}
+      onCloseAutoFocus={(e) => {
+        e.preventDefault();
+        unlockBodyScroll();
+        props.onCloseAutoFocus?.(e);
+      }}
       onPointerDownOutside={(e) => {
         unlockBodyScroll();
         props.onPointerDownOutside?.(e);

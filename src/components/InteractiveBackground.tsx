@@ -7,6 +7,10 @@ interface Particle {
   y: number
   vx: number
   vy: number
+  dispX: number
+  dispY: number
+  targetDispX: number
+  targetDispY: number
   radius: number
   baseRadius: number
   color: string
@@ -31,7 +35,7 @@ export function InteractiveBackground() {
     targetX: -1000,
     targetY: -1000,
     isActive: false,
-    radius: 180,
+    radius: 85, // Refined, focused interaction radius (reduced by over 50%)
   })
 
   useEffect(() => {
@@ -47,13 +51,13 @@ export function InteractiveBackground() {
     let dpr = 1
     let particles: Particle[] = []
 
-    // Palette with glowing white, soft neon cyan, electric sky, and luminous teal
+    // Palette with refined, serene luminous tones
     const colors = [
-      "255, 255, 255", // Pure Glowing White
-      "56, 189, 248",  // Electric Sky Neon
-      "34, 211, 238",  // Soft Neon Cyan
-      "125, 211, 252", // Luminous Frost Ice
-      "45, 212, 191",  // Bright Aqua Mint
+      "255, 255, 255", // Subtle Pure White
+      "56, 189, 248",  // Soft Sky Blue
+      "34, 211, 238",  // Ambient Cyan
+      "147, 197, 253", // Serene Frost
+      "45, 212, 191",  // Faint Mint
     ]
 
     const handleResize = () => {
@@ -69,25 +73,29 @@ export function InteractiveBackground() {
 
     const initParticles = () => {
       particles = []
-      // Density calculation: ~1 particle per 25,000 px^2 on desktop, minimum 25, capped at 65
+      // Breathable, low density: ~1 particle per 90,000 px^2 (60-70% reduction)
       const area = width * height
-      const count = Math.min(Math.max(Math.floor(area / 28000), 28), 65)
+      const count = Math.min(Math.max(Math.floor(area / 90000), 10), 20)
 
       for (let i = 0; i < count; i++) {
         const color = colors[Math.floor(Math.random() * colors.length)]
-        const baseRadius = Math.random() * 2 + 1.2
-        const baseAlpha = Math.random() * 0.45 + 0.25
+        const baseRadius = Math.random() * 1.0 + 1.0 // Faint, subtle diameter (1.0px - 2.0px)
+        const baseAlpha = Math.random() * 0.06 + 0.08 // Faint watermark opacity (0.08 - 0.14)
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.55,
-          vy: (Math.random() - 0.5) * 0.55,
+          vx: (Math.random() - 0.5) * 0.16, // Ultra-slow, calm drifting speed
+          vy: (Math.random() - 0.5) * 0.16,
+          dispX: 0,
+          dispY: 0,
+          targetDispX: 0,
+          targetDispY: 0,
           radius: baseRadius,
           baseRadius,
           color,
           alpha: baseAlpha,
           baseAlpha,
-          pulseSpeed: Math.random() * 0.02 + 0.01,
+          pulseSpeed: Math.random() * 0.008 + 0.004,
           pulseOffset: Math.random() * Math.PI * 2,
         })
       }
@@ -121,115 +129,125 @@ export function InteractiveBackground() {
     let time = 0
 
     const render = () => {
-      time += 0.016
+      time += 0.01
       ctx.clearRect(0, 0, width, height)
 
       const mouse = mouseRef.current
-      // Smooth interpolation (lerp) for liquid fluid cursor movement
+      // Smooth easing (lerp) for cursor interpolation
       if (mouse.isActive) {
-        mouse.x += (mouse.targetX - mouse.x) * 0.12
-        mouse.y += (mouse.targetY - mouse.y) * 0.12
+        mouse.x += (mouse.targetX - mouse.x) * 0.06
+        mouse.y += (mouse.targetY - mouse.y) * 0.06
       } else {
-        // Slowly drift away when inactive
-        mouse.x += (-1000 - mouse.x) * 0.05
-        mouse.y += (-1000 - mouse.y) * 0.05
+        mouse.x += (-1000 - mouse.x) * 0.03
+        mouse.y += (-1000 - mouse.y) * 0.03
       }
 
-      // Draw subtle interactive luminous aura following the mouse
-      if (mouse.x > -500 && mouse.y > -500) {
+      // Very soft, ambient mouse aura (watermark subtlety)
+      if (mouse.x > -300 && mouse.y > -300) {
         const auraGradient = ctx.createRadialGradient(
           mouse.x,
           mouse.y,
           0,
           mouse.x,
           mouse.y,
-          mouse.radius * 1.5
+          mouse.radius * 1.2
         )
-        auraGradient.addColorStop(0, "rgba(56, 189, 248, 0.22)")
-        auraGradient.addColorStop(0.35, "rgba(34, 211, 238, 0.12)")
-        auraGradient.addColorStop(0.7, "rgba(255, 255, 255, 0.04)")
+        auraGradient.addColorStop(0, "rgba(56, 189, 248, 0.06)")
+        auraGradient.addColorStop(0.5, "rgba(34, 211, 238, 0.02)")
         auraGradient.addColorStop(1, "rgba(56, 189, 248, 0)")
 
         ctx.fillStyle = auraGradient
         ctx.beginPath()
-        ctx.arc(mouse.x, mouse.y, mouse.radius * 1.5, 0, Math.PI * 2)
+        ctx.arc(mouse.x, mouse.y, mouse.radius * 1.2, 0, Math.PI * 2)
         ctx.fill()
       }
 
       // Update and draw particles
       const len = particles.length
-      const maxDistance = 140
+      const maxDistance = 130
 
       for (let i = 0; i < len; i++) {
         const p = particles[i]
 
-        // Organic ambient floating drift with slight sinusoidal wave
-        p.x += p.vx + Math.sin(time + p.pulseOffset) * 0.15
-        p.y += p.vy + Math.cos(time + p.pulseOffset) * 0.15
+        // Organic, very slow ambient drift with gentle wave oscillation
+        p.x += p.vx + Math.sin(time * 0.8 + p.pulseOffset) * 0.04
+        p.y += p.vy + Math.cos(time * 0.8 + p.pulseOffset) * 0.04
 
-        // Boundary wrapping with margin
-        if (p.x < -20) p.x = width + 20
-        else if (p.x > width + 20) p.x = -20
-        if (p.y < -20) p.y = height + 20
-        else if (p.y > height + 20) p.y = -20
+        // Screen boundary wrapping
+        if (p.x < -30) p.x = width + 30
+        else if (p.x > width + 30) p.x = -30
+        if (p.y < -30) p.y = height + 30
+        else if (p.y > height + 30) p.y = -30
 
-        // Subtle breathing radius/alpha pulse
-        p.alpha = p.baseAlpha + Math.sin(time * 2 + p.pulseOffset) * 0.15
+        // Gentle, slow breathing opacity
+        p.alpha = p.baseAlpha + Math.sin(time + p.pulseOffset) * 0.03
 
-        // Mouse interaction: Gentle attraction / deflection physics
-        const dx = mouse.x - p.x
-        const dy = mouse.y - p.y
+        // Calculate distance from cursor
+        const currentRenderX = p.x + p.dispX
+        const currentRenderY = p.y + p.dispY
+        const dx = mouse.x - currentRenderX
+        const dy = mouse.y - currentRenderY
         const dist = Math.sqrt(dx * dx + dy * dy)
 
         if (dist < mouse.radius && mouse.isActive) {
-          const force = (1 - dist / mouse.radius) * 1.5
+          // Subtle soft deflection with friction
+          const force = (1 - dist / mouse.radius)
           const angle = Math.atan2(dy, dx)
           
-          // Particles subtly orbit and accelerate around the cursor
-          p.x += Math.cos(angle + Math.PI / 4) * force * 1.2
-          p.y += Math.sin(angle + Math.PI / 4) * force * 1.2
-          p.radius = p.baseRadius * (1 + force * 0.7)
-          p.alpha = Math.min(p.baseAlpha + force * 0.5, 0.95)
+          // Target displacement: smooth drift away from cursor without abrupt jumps
+          p.targetDispX = -Math.cos(angle) * force * 18
+          p.targetDispY = -Math.sin(angle) * force * 18
+          p.alpha = Math.min(p.baseAlpha + force * 0.08, 0.22)
 
-          // Direct dynamic connection line to cursor with soft neon cyan glow
-          ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / mouse.radius) * 0.45})`
-          ctx.lineWidth = (1 - dist / mouse.radius) * 1.4
+          // Delicate, whisper-thin connection line to cursor
+          const lineStrength = (1 - dist / mouse.radius) * 0.12
+          ctx.strokeStyle = `rgba(56, 189, 248, ${lineStrength})`
+          ctx.lineWidth = 0.8
           ctx.beginPath()
-          ctx.moveTo(p.x, p.y)
+          ctx.moveTo(currentRenderX, currentRenderY)
           ctx.lineTo(mouse.x, mouse.y)
           ctx.stroke()
         } else {
-          p.radius = p.baseRadius
+          // Return gently to original trajectory
+          p.targetDispX = 0
+          p.targetDispY = 0
         }
 
-        // Draw individual glowing node
-        ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`
+        // Apply friction / lerp easing to displacement
+        p.dispX += (p.targetDispX - p.dispX) * 0.04
+        p.dispY += (p.targetDispY - p.dispY) * 0.04
+
+        const finalX = p.x + p.dispX
+        const finalY = p.y + p.dispY
+
+        // Draw individual soft node
+        ctx.fillStyle = `rgba(${p.color}, ${Math.max(p.alpha, 0.04)})`
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
+        ctx.arc(finalX, finalY, p.radius, 0, Math.PI * 2)
         ctx.fill()
 
-        // Subtle outer glow halo for nodes
-        if (p.radius > 1.8) {
-          ctx.fillStyle = `rgba(${p.color}, ${p.alpha * 0.35})`
-          ctx.beginPath()
-          ctx.arc(p.x, p.y, p.radius * 2.2, 0, Math.PI * 2)
-          ctx.fill()
-        }
+        // Watermark halo glow for subtle depth
+        ctx.fillStyle = `rgba(${p.color}, ${Math.max(p.alpha * 0.25, 0.015)})`
+        ctx.beginPath()
+        ctx.arc(finalX, finalY, p.radius * 2.4, 0, Math.PI * 2)
+        ctx.fill()
 
-        // Inter-particle network connection lines (voice / neural mesh)
+        // Faint inter-particle connection lines (neural mesh watermark)
         for (let j = i + 1; j < len; j++) {
           const p2 = particles[j]
-          const pjDx = p.x - p2.x
-          const pjDy = p.y - p2.y
+          const p2FinalX = p2.x + p2.dispX
+          const p2FinalY = p2.y + p2.dispY
+          const pjDx = finalX - p2FinalX
+          const pjDy = finalY - p2FinalY
           const pjDist = Math.sqrt(pjDx * pjDx + pjDy * pjDy)
 
           if (pjDist < maxDistance) {
-            const lineAlpha = (1 - pjDist / maxDistance) * 0.28
+            const lineAlpha = (1 - pjDist / maxDistance) * 0.06 // Ultra-subtle watermark line (max 0.06)
             ctx.strokeStyle = `rgba(56, 189, 248, ${lineAlpha})`
-            ctx.lineWidth = (1 - pjDist / maxDistance) * 1.0
+            ctx.lineWidth = 0.75
             ctx.beginPath()
-            ctx.moveTo(p.x, p.y)
-            ctx.lineTo(p2.x, p2.y)
+            ctx.moveTo(finalX, finalY)
+            ctx.lineTo(p2FinalX, p2FinalY)
             ctx.stroke()
           }
         }
@@ -253,9 +271,10 @@ export function InteractiveBackground() {
     <div className="fixed inset-0 pointer-events-none z-[60] overflow-hidden">
       <canvas
         ref={canvasRef}
-        className="w-full h-full block opacity-95"
+        className="w-full h-full block"
         style={{ pointerEvents: "none" }}
       />
     </div>
   )
 }
+

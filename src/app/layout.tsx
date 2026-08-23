@@ -1,6 +1,9 @@
 import type {Metadata} from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
+import { InteractiveBackground } from '@/components/InteractiveBackground';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,8 +23,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} scroll-smooth`} suppressHydrationWarning>
-      <body className="font-sans antialiased text-foreground">
-        {children}
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var lang = localStorage.getItem('selectedLanguage') || localStorage.getItem('bch_selected_lang') || 'en';
+                if (lang === 'en' || lang === 'es' || lang === 'fr' || lang === 'de') {
+                  document.documentElement.lang = lang;
+                }
+              } catch(e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className="font-sans antialiased text-foreground bg-[#071322]">
+        <LanguageProvider>
+          <InteractiveBackground />
+          {children}
+        </LanguageProvider>
+        <Script src="/js/language.js" strategy="afterInteractive" />
       </body>
     </html>
   );

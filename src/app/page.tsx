@@ -9,6 +9,7 @@ import { HowItWorks } from "@/components/HowItWorks"
 import { VideoCTA } from "@/components/VideoCTA"
 import { Contact } from "@/components/Contact"
 import { Footer } from "@/components/Footer"
+import { InteractiveBackground } from "@/components/InteractiveBackground"
 
 export default function Home() {
   useEffect(() => {
@@ -22,23 +23,24 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative flex flex-col min-h-screen selection:bg-primary selection:text-white overflow-x-hidden">
+    <div className="relative flex flex-col min-h-screen selection:bg-primary selection:text-white overflow-x-hidden bg-[#071322]">
       {/* Universal Premium Background Layers */}
+      <InteractiveBackground />
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-dot-grid opacity-60" />
-        <div className="absolute inset-0 bg-noise" />
+        <div className="absolute inset-0 bg-dot-grid opacity-20" />
+        <div className="absolute inset-0 bg-noise opacity-30" />
         
         {/* Soft Aurora Glows */}
-        <div className="absolute top-[-15%] right-[-10%] w-[70vw] h-[70vw] bg-primary/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
-        <div className="absolute bottom-[5%] left-[-15%] w-[60vw] h-[60vw] bg-accent/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '15s' }} />
+        <div className="absolute top-[-15%] right-[-10%] w-[70vw] h-[70vw] bg-cyan-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
+        <div className="absolute bottom-[5%] left-[-15%] w-[60vw] h-[60vw] bg-teal-500/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '15s' }} />
       </div>
 
       <Header />
-      {/* Normalized padding-top for standard header size */}
-      <main className="relative z-10 flex-grow pt-32 sm:pt-40 md:pt-48 lg:pt-56">
+      {/* Main container seamlessly aligned to dark midnight theme with zero gap */}
+      <main className="relative z-10 flex-grow m-0 p-0 bg-transparent">
         <Hero />
         <div className="relative">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent pointer-events-none" />
           <HowItWorks />
         </div>
         <VideoCTA />

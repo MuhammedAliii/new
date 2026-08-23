@@ -31,12 +31,79 @@
   * {
     @apply border-border;
   }
+
+  html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-body;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* 2. Safe Word Breaking (The 'German' Fix) & Adaptive Typography */
+  h1, h2, h3, h4, h5, h6,
+  p, span, a, button, label, input, textarea, select,
+  [data-i18n], .btn, [role="button"], li, blockquote {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: normal;
+  }
+
+  /* Ensure headings and content break gracefully without cutting off */
+  h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  /* 1. Elastic Button Architecture Global Defaults */
+  button, 
+  [role="button"], 
+  .btn, 
+  a.btn {
+    text-align: center;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    height: auto;
   }
 }
 
+/* 3. Flexible Grids & Flexbox Containment */
 @layer utilities {
+  /* Prevent any grid child from stretching grid container beyond viewport */
+  .adaptive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 0), 1fr));
+  }
+
+  /* Ensure flex & grid items respect parent width and can wrap */
+  .grid > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .flex-adaptive {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Elastic Button Utilities */
+  .btn-elastic {
+    height: auto !important;
+    min-height: fit-content;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.35;
+  }
+
   .bg-dot-grid {
     background-image: radial-gradient(circle, hsl(var(--foreground) / 0.05) 1px, transparent 1px);
     background-size: 32px 32px;

@@ -1,4 +1,8 @@
 {
-  "name": "studio-6878720066",
-  "description": "App imported from Firebase Studio"
+  "name": "Better Call Hana",
+  "description": "The premium AI voice receptionist that answers every call and fills your calendar, 24/7.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

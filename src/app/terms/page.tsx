@@ -1,7 +1,28 @@
+"use client"
+
+import { useEffect } from "react"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
+import { useLanguage } from "@/context/LanguageContext"
 
 export default function TermsOfService() {
+  const { t } = useLanguage();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const win = window as unknown as {
+        BetterCallHanaI18n?: { translatePage: (l: string) => void; getLanguage: () => string };
+        updateLanguage?: (l?: string) => void;
+      };
+      if (win.updateLanguage && typeof win.updateLanguage === 'function') {
+        win.updateLanguage();
+      } else if (win.BetterCallHanaI18n && typeof win.BetterCallHanaI18n.translatePage === 'function') {
+        const lang = win.BetterCallHanaI18n.getLanguage ? win.BetterCallHanaI18n.getLanguage() : 'en';
+        win.BetterCallHanaI18n.translatePage(lang);
+      }
+    }
+  }, []);
+
   return (
     <div className="relative flex flex-col min-h-screen overflow-x-hidden">
       {/* Universal Premium Background Layers */}
@@ -13,40 +34,113 @@ export default function TermsOfService() {
 
       <Header />
       {/* Normalized padding-top for standard header size */}
-      <main className="relative z-10 flex-grow pt-48 md:pt-56 pb-24 px-6 max-w-4xl mx-auto">
-        <div className="bg-white/50 premium-blur p-8 md:p-12 rounded-[2.5rem] border border-white/20 shadow-xl ring-1 ring-black/[0.02]">
-          <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tighter">Terms of Service</h1>
-          <div className="prose prose-slate max-w-none space-y-8 text-muted-foreground leading-relaxed">
-            <p className="text-xs font-bold uppercase tracking-widest text-primary">Last Updated: May 2026</p>
-            
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground tracking-tight">1. Agreement to Terms</h2>
-              <p>By using Better Call Hana, you agree to be bound by these Terms of Service. If you do not agree, please do not use our services. Our goal is to provide a seamless AI integration for your professional practice.</p>
+      <main className="relative z-10 flex-grow pt-48 md:pt-56 pb-24 px-6 max-w-4xl mx-auto w-full">
+        <div className="bg-white/95 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] border border-slate-200/80 shadow-2xl ring-1 ring-slate-900/5 w-full break-words [overflow-wrap:break-word]">
+          <h1 
+            data-i18n="terms.title" 
+            className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-slate-950 break-words"
+          >
+            {t('terms.title')}
+          </h1>
+          
+          <div className="mb-8">
+            <span 
+              data-i18n="terms.lastUpdated" 
+              className="text-xs font-bold uppercase tracking-widest text-cyan-800 bg-cyan-100/70 border border-cyan-300/60 px-3.5 py-1.5 rounded-full inline-block"
+            >
+              {t('terms.lastUpdated')}
+            </span>
+          </div>
+
+          <div className="space-y-8 text-slate-700 text-base md:text-[17px] leading-relaxed break-words">
+            <section className="space-y-3">
+              <h2 
+                data-i18n="terms.s1.title" 
+                className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight break-words"
+              >
+                {t('terms.s1.title')}
+              </h2>
+              <p 
+                data-i18n="terms.s1.desc" 
+                className="text-slate-700 font-normal leading-relaxed break-words"
+              >
+                {t('terms.s1.desc')}
+              </p>
             </section>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground tracking-tight">2. Service Description</h2>
-              <p>Better Call Hana provides an AI-powered voice receptionist designed to answer calls, answer questions, and book appointments for professional businesses. We act as an extension of your front desk, active 24/7.</p>
+            <section className="space-y-3">
+              <h2 
+                data-i18n="terms.s2.title" 
+                className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight break-words"
+              >
+                {t('terms.s2.title')}
+              </h2>
+              <p 
+                data-i18n="terms.s2.desc" 
+                className="text-slate-700 font-normal leading-relaxed break-words"
+              >
+                {t('terms.s2.desc')}
+              </p>
             </section>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground tracking-tight">3. Use of AI Technology</h2>
-              <p>You acknowledge that Hana is an artificial intelligence. While we strive for high accuracy and professionality, we do not guarantee that the service will be error-free at all times. Users are responsible for reviewing appointment bookings in their own systems.</p>
+            <section className="space-y-3">
+              <h2 
+                data-i18n="terms.s3.title" 
+                className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight break-words"
+              >
+                {t('terms.s3.title')}
+              </h2>
+              <p 
+                data-i18n="terms.s3.desc" 
+                className="text-slate-700 font-normal leading-relaxed break-words"
+              >
+                {t('terms.s3.desc')}
+              </p>
             </section>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground tracking-tight">4. Trial Period</h2>
-              <p>We offer a 7-day free trial to experience the impact on your business. Following the trial period, subscription fees will apply as agreed upon during the premium sign-up process.</p>
+            <section className="space-y-3">
+              <h2 
+                data-i18n="terms.s4.title" 
+                className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight break-words"
+              >
+                {t('terms.s4.title')}
+              </h2>
+              <p 
+                data-i18n="terms.s4.desc" 
+                className="text-slate-700 font-normal leading-relaxed break-words"
+              >
+                {t('terms.s4.desc')}
+              </p>
             </section>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground tracking-tight">5. Limitation of Liability</h2>
-              <p>Better Call Hana shall not be liable for any indirect, incidental, or consequential damages arising out of your use of the service. We provide the tools for growth, but final business decisions remain with the owner.</p>
+            <section className="space-y-3">
+              <h2 
+                data-i18n="terms.s5.title" 
+                className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight break-words"
+              >
+                {t('terms.s5.title')}
+              </h2>
+              <p 
+                data-i18n="terms.s5.desc" 
+                className="text-slate-700 font-normal leading-relaxed break-words"
+              >
+                {t('terms.s5.desc')}
+              </p>
             </section>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground tracking-tight">6. Modifications</h2>
-              <p>We reserve the right to modify these terms at any time. Your continued use of the service constitutes acceptance of updated terms. We are committed to transparency as our technology evolves.</p>
+            <section className="space-y-3">
+              <h2 
+                data-i18n="terms.s6.title" 
+                className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight break-words"
+              >
+                {t('terms.s6.title')}
+              </h2>
+              <p 
+                data-i18n="terms.s6.desc" 
+                className="text-slate-700 font-normal leading-relaxed break-words"
+              >
+                {t('terms.s6.desc')}
+              </p>
             </section>
           </div>
         </div>
@@ -55,3 +149,4 @@ export default function TermsOfService() {
     </div>
   )
 }
+

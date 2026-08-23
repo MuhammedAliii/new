@@ -4,9 +4,11 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { BookingDialog } from "./BookingDialog"
+import { useLanguage } from "@/context/LanguageContext"
 import { ArrowRight } from "lucide-react"
 
 export function Hero() {
+  const { t } = useLanguage();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -15,53 +17,169 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-4 pb-16 md:pt-16 md:pb-32 px-6 text-center max-w-5xl mx-auto flex flex-col items-center">
-      {/* Background decoration local to Hero */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(18,160,153,0.08)_0%,transparent_70%)] pointer-events-none" />
-
-      {/* Premium Badge */}
-      <div className={`inline-flex items-center gap-2.5 px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-white shadow-[0_15px_40px_-10px_rgba(0,0,0,0.08)] border border-border/60 text-primary text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] mb-8 md:mb-12 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'} relative z-10`}>
-        The Gold Standard for AI Receptionists
+    <section 
+      id="hero-section"
+      className="relative w-full overflow-hidden bg-gradient-to-b from-[#071322] via-[#081728] to-[#0a1c30] text-slate-100 min-h-[92vh] sm:min-h-[96vh] lg:min-h-screen flex items-center justify-center pt-32 sm:pt-36 md:pt-40 pb-20 md:pb-24 px-4 sm:px-6"
+    >
+      {/* Ambient background atmosphere */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#061220]/75 to-[#040c16]" />
+        {/* Luminous horizontal atmospheric horizon beam */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92vw] max-w-7xl h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent blur-[1px]" />
+        {/* Soft bottom blend into subsequent page sections */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-[#0a1c30]/80 to-[#0a1c30]" />
       </div>
 
-      <h1 className={`text-4xl sm:text-6xl md:text-8xl font-[900] tracking-[-0.05em] mb-8 md:mb-10 leading-[1] md:leading-[0.9] bg-clip-text text-transparent bg-gradient-to-b from-foreground via-foreground to-foreground/60 relative z-10 transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-        Never Miss a Call <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-accent px-2">Again</span>
-      </h1>
-      
-      <p className={`text-base md:text-xl text-muted-foreground/80 mb-12 md:mb-16 max-w-2xl mx-auto leading-relaxed font-medium relative z-10 transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-        The premium AI voice receptionist that answers every call, triages every request, and fills your calendar, 24/7.
-      </p>
-
-      <div className={`relative group z-10 transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} w-full sm:w-auto`}>
-        <div className="absolute -inset-12 bg-primary/30 rounded-full blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+      {/* CENTRAL ECLIPSE SHADOW & LOCKED CONTENT UNIT (Single Bound Container) */}
+      <div className="relative flex items-center justify-center w-[min(90vw,340px)] h-[min(90vw,340px)] sm:w-[480px] sm:h-[480px] md:w-[640px] md:h-[640px] lg:w-[750px] lg:h-[750px] xl:w-[840px] xl:h-[840px] z-10">
         
-        <Button 
-          size="lg" 
-          className="relative overflow-hidden rounded-full px-10 md:px-20 h-16 md:h-24 text-lg md:text-2xl font-black bg-primary text-white shadow-[0_40px_80px_-15px_rgba(18,160,153,0.45)] transition-all duration-500 hover:scale-[1.05] active:scale-[0.98] group/btn w-full sm:w-auto"
-          onClick={() => setIsBookingOpen(true)}
-        >
-          {/* Flashlight sweep */}
-          <span className="absolute inset-0 block w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-          
-          <span className="relative z-10 flex items-center justify-center gap-3 md:gap-5">
-            Book Free Demo
-            <ArrowRight className="w-5 h-5 md:w-8 md:h-8 group-hover:translate-x-3 transition-transform duration-300" />
-          </span>
-        </Button>
-      </div>
+        {/* Soft Ambient Radiance behind the Eclipse */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-400/15 to-teal-400/10 blur-[60px] sm:blur-[90px] opacity-75 pointer-events-none z-0" />
 
-      <div className={`mt-12 md:mt-20 flex flex-wrap justify-center items-center gap-4 md:gap-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-muted-foreground/60 relative z-10 transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-        <span className="hidden sm:block w-12 md:w-16 h-px bg-border/60" />
-        <span className="px-2">Instant Activation</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-border/60 sm:hidden" />
-        <span className="px-2">Expert Integration</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-border/60 sm:hidden" />
-        <span className="px-2">24/7 Support</span>
-        <span className="hidden sm:block w-12 md:w-16 h-px bg-border/60" />
+        {/* Rotating Precision LED Border Lights Ring (60s slow rotation) */}
+        <div className="absolute inset-[-10px] sm:inset-[-18px] md:inset-[-22px] animate-[spin_60s_linear_infinite] pointer-events-none z-0">
+          <svg 
+            className="w-full h-full" 
+            viewBox="0 0 1000 1000" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              {/* Clean, high-tech LED Glow filter */}
+              <filter id="ledGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="majorLedGlow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="5" result="blur1" />
+                <feGaussianBlur stdDeviation="2" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Outer delicate guide orbit line */}
+            <circle 
+              cx="500" 
+              cy="500" 
+              r="485" 
+              stroke="rgba(56,189,248,0.18)" 
+              strokeWidth="1" 
+              strokeDasharray="4 8"
+            />
+
+            {/* Exact Ring of 64 Mathematically Positioned Glowing LED Points */}
+            {Array.from({ length: 64 }).map((_, index) => {
+              const angle = (index * 360) / 64;
+              const rad = (angle * Math.PI) / 180;
+              const r = 485;
+              const cx = 500 + r * Math.cos(rad);
+              const cy = 500 + r * Math.sin(rad);
+              const isCardinal = index % 16 === 0;
+              const isMajor = index % 4 === 0;
+
+              return (
+                <g key={index}>
+                  {/* Glowing LED Point */}
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={isCardinal ? 4.5 : isMajor ? 3.5 : 2.2}
+                    fill={isCardinal ? "#ffffff" : isMajor ? "#e0f2fe" : "#38bdf8"}
+                    filter={isMajor ? "url(#majorLedGlow)" : "url(#ledGlow)"}
+                    opacity={isCardinal ? 1 : isMajor ? 0.95 : 0.8}
+                  />
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+
+        {/* Concentric Subtle Inner Coordinate Ring (Counter-rotating 120s) */}
+        <div className="absolute inset-[12px] sm:inset-[24px] md:inset-[32px] animate-[spin_120s_linear_infinite_reverse] opacity-40 pointer-events-none z-0">
+          <svg className="w-full h-full" viewBox="0 0 1000 1000" fill="none">
+            <circle 
+              cx="500" 
+              cy="500" 
+              r="450" 
+              stroke="rgba(34,211,238,0.2)" 
+              strokeWidth="1" 
+              strokeDasharray="2 12"
+            />
+          </svg>
+        </div>
+
+        {/* THE CENTRAL ECLIPSE SHADOW (Solid, heavy, stable circular mask) */}
+        <div className="absolute inset-0 rounded-full bg-[#050e18] border border-cyan-400/25 shadow-[0_0_100px_rgba(2,8,16,0.95),inset_0_0_90px_rgba(0,0,0,0.9)] overflow-hidden z-0 pointer-events-none">
+          {/* Subtle inner depth vignette */}
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#030911]/40 to-[#02060c] opacity-90" />
+          
+          {/* Extremely subtle interior specular sheen */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/[0.02] to-sky-300/[0.04]" />
+        </div>
+
+        {/* LOCKED FOREGROUND CONTENT - OPTICALLY CENTERED (-52% Y-Translate) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[52%] z-10 w-full max-w-[min(78vw,280px)] sm:max-w-[420px] md:max-w-[540px] lg:max-w-[640px] xl:max-w-[700px] flex flex-col items-center justify-center text-center gap-2.5 sm:gap-4 md:gap-5 m-0 p-0 pointer-events-auto">
+          {/* Premium Pill Badge */}
+          <div className={`m-0 inline-flex items-center text-center px-3.5 py-1 sm:px-5 sm:py-2 rounded-full bg-white/[0.06] backdrop-blur-xl border border-cyan-400/30 text-cyan-300 text-[8px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-[0.18em] sm:tracking-[0.22em] shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'}`}>
+            <span data-i18n="hero.badge" className="text-center break-words">{t('hero.badge', 'Gold Standard AI Reception')}</span>
+          </div>
+
+          {/* Main Headline */}
+          <h1 className={`m-0 p-0 text-[21px] xs:text-2xl sm:text-4xl md:text-5xl lg:text-[56px] font-black tracking-tight leading-[1.14] sm:leading-[1.18] md:leading-[1.2] text-white text-center [text-shadow:0_2px_10px_rgba(0,0,0,0.8)] transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+            <span data-i18n="hero.title1">{t('hero.title1', 'Never Miss a Call')}</span> <br />
+            <span data-i18n="hero.title2" className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-cyan-300 to-sky-300 drop-shadow-[0_0_25px_rgba(34,211,238,0.3)]">
+              {t('hero.title2', 'Ever Again')}
+            </span>
+          </h1>
+          
+          {/* Subheading */}
+          <p data-i18n="hero.description" className={`m-0 p-0 text-[11px] xs:text-xs sm:text-sm md:text-base text-slate-300/90 max-w-[260px] sm:max-w-md md:max-w-lg mx-auto leading-snug sm:leading-relaxed text-center font-normal tracking-wide transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+            {t('hero.description', 'The intelligent voice receptionist that answers every call, triages client requests, and books appointments 24/7.')}
+          </p>
+
+          {/* Primary Call to Action Button */}
+          <div className={`m-0 relative group transition-all duration-1000 delay-700 max-w-full ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+            {/* Luminous ambient aura on hover */}
+            <div className="absolute -inset-3 bg-gradient-to-r from-teal-400/40 via-cyan-400/40 to-sky-400/40 rounded-full blur-xl opacity-40 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            
+            <Button 
+              id="hero-book-demo-btn"
+              data-i18n="hero.cta"
+              size="lg" 
+              className="relative overflow-hidden rounded-full px-6 sm:px-9 md:px-11 py-2.5 sm:py-3.5 md:py-4 min-h-[2.5rem] sm:min-h-[3.25rem] md:min-h-[3.5rem] h-auto text-[11px] sm:text-sm md:text-base font-bold bg-gradient-to-r from-teal-400 via-cyan-300 to-teal-400 text-slate-950 shadow-[0_0_25px_rgba(34,211,238,0.4)] hover:shadow-[0_0_35px_rgba(34,211,238,0.7)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] group/btn border border-cyan-100/40 cursor-pointer text-center whitespace-normal leading-snug"
+              onClick={() => setIsBookingOpen(true)}
+            >
+              {/* Shimmer light sweep */}
+              <span className="absolute inset-0 block w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+              
+              <span className="relative z-10 flex items-center justify-center gap-1.5 sm:gap-2.5 text-center flex-wrap">
+                <span>{t('hero.cta', 'Book Free Demo')}</span>
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 group-hover:translate-x-1.5 transition-transform duration-300 rtl-flip shrink-0" />
+              </span>
+            </Button>
+          </div>
+
+          {/* Feature Trust Bar */}
+          <div className={`m-0 flex items-center justify-center flex-wrap gap-2 sm:gap-3.5 text-[7.5px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] sm:tracking-[0.22em] text-slate-400/80 transition-all duration-1000 delay-900 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <span data-i18n="hero.feature1" className="text-slate-300">{t('hero.feature1', 'Instant Setup')}</span>
+            <span className="w-1 h-1 rounded-full bg-cyan-400/60" />
+            <span data-i18n="hero.feature2" className="text-slate-300">{t('hero.feature2', '24/7 Availability')}</span>
+            <span className="w-1 h-1 rounded-full bg-cyan-400/60" />
+            <span data-i18n="hero.feature3" className="text-slate-300">{t('hero.feature3', '100% Capture')}</span>
+          </div>
+        </div>
       </div>
 
       <BookingDialog open={isBookingOpen} onOpenChange={setIsBookingOpen} />
     </section>
   )
 }
+

@@ -528,8 +528,6 @@
    Strictly targets iPhones, iPads & WebKit browsers via CSS feature query
    ========================================================================== */
 @supports (-webkit-touch-callout: none) {
-  /* 🔴 FIX: Removed the toxic global wildcard (*) and transform resets here! 
-     Only strictly targeting the UI elements that actually use blur to prevent VRAM crash. */
   .backdrop-blur,
   [class*="backdrop-blur"],
   [class*="backdrop-filter"],
@@ -592,5 +590,19 @@
   .blur-\[100px\],
   .blur-\[120px\] {
     display: none !important;
+  }
+}
+
+/* ==========================================================================
+   9. iOS TAP DELAY ASSASSIN (ZERO RISK)
+   ========================================================================== */
+@supports (-webkit-touch-callout: none) {
+  /* 🔴 Kills the redundant paint operations and highlight flashes 
+     on interactive elements the exact millisecond you touch them.
+     This carries ZERO risk to your structural layout. */
+  button, a, input, select, [role="button"], .btn {
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
   }
 }

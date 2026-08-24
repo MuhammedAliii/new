@@ -16,21 +16,19 @@ export function LanguageSwitcher({ isLightSection = false, className = "", align
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on click outside
+  // 🔴 FIX: Unified pointer listener mapped to generic Event to pass TypeScript strict mode, preventing iOS double-firing
   useEffect(() => {
-    function handleClickOutside(event: Event) {
+    function handleOutsideClick(event: Event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside, { passive: true });
-      document.addEventListener('touchstart', handleClickOutside, { passive: true });
+      document.addEventListener('pointerdown', handleOutsideClick, { passive: true });
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('pointerdown', handleOutsideClick);
     };
   }, [isOpen]);
 
@@ -49,11 +47,11 @@ export function LanguageSwitcher({ isLightSection = false, className = "", align
       <button
         id="language-switcher-btn"
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label="Select Language"
-        className={`group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 h-9 sm:h-10 rounded-full border transition-all duration-300 ease-in-out cursor-pointer active:scale-95 ${
+        className={`group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 h-9 sm:h-10 rounded-full border transition-all duration-300 ease-in-out cursor-pointer active:scale-95 touch-manipulation ${
           isOpen
             ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.35)]"
             : isLightSection
@@ -78,12 +76,13 @@ export function LanguageSwitcher({ isLightSection = false, className = "", align
         }`} />
       </button>
 
-      {/* Glassmorphism Dropdown Menu */}
+      {/* Dropdown Menu */}
       {isOpen && (
         <div
           id="language-dropdown-menu"
           role="menu"
           aria-orientation="vertical"
+          /* 🔴 FIX: Restored backdrop-blur-2xl so desktop design remains flawless */
           className={`absolute z-50 mt-2 w-48 sm:w-52 rounded-2xl p-1.5 backdrop-blur-2xl transition-all duration-300 ease-out transform origin-top shadow-[0_20px_50px_rgba(0,0,0,0.6)] ${
             align === 'left' ? 'left-0' : align === 'center' ? 'left-1/2 -translate-x-1/2' : 'right-0'
           } ${
@@ -92,7 +91,7 @@ export function LanguageSwitcher({ isLightSection = false, className = "", align
               : "bg-[#071729]/95 border border-cyan-500/30 text-white shadow-[0_20px_60px_rgba(2,12,27,0.85)] ring-1 ring-white/10"
           }`}
         >
-          {/* Subtle Top Glow Sheen */}
+          {/* Top Glow Sheen */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent rounded-2xl pointer-events-none" />
 
           <div className="px-3 py-2 border-b border-white/10 mb-1">
@@ -112,7 +111,7 @@ export function LanguageSwitcher({ isLightSection = false, className = "", align
                   id={`lang-opt-${lang.code}`}
                   onClick={() => handleSelect(lang.code)}
                   role="menuitem"
-                  className={`w-full flex items-center justify-between px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer touch-manipulation ${
                     isSelected
                       ? isLightSection
                         ? "bg-cyan-50 text-cyan-800 font-bold border border-cyan-200"

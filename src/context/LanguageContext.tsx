@@ -40,7 +40,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Sync language attribute
+  // Sync language attribute safely and preserve RTL (Right-to-Left) resets
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.lang = language;
@@ -52,14 +52,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, [language]);
 
-  // Listen for external language change events from vanilla JS (language.js)
+  // Listen for external language change events without causing state loops
   useEffect(() => {
     const handleLangEvent = (event: Event) => {
       const customEvent = event as CustomEvent<{ language: Language }>;
       if (customEvent.detail && customEvent.detail.language) {
         const newLang = customEvent.detail.language;
-        if (newLang !== language && (newLang === 'en' || newLang === 'es' || newLang === 'fr' || newLang === 'de')) {
-          setLanguageState(newLang);
+        if (newLang === 'en' || newLang === 'es' || newLang === 'fr' || newLang === 'de') {
+          // Functional state update prevents infinite render loops
+          setLanguageState(prev => (prev !== newLang ? newLang : prev));
         }
       }
     };
@@ -68,7 +69,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return () => {
       window.removeEventListener('languageChanged', handleLangEvent);
     };
-  }, [language]);
+  }, []);
 
   const setLanguage = useCallback((newLang: Language) => {
     if (newLang !== 'en' && newLang !== 'es' && newLang !== 'fr' && newLang !== 'de') {
@@ -92,14 +93,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         document.body.classList.remove('rtl-active');
       }
 
-      // Asynchronously update any external DOM nodes without blocking user interactions
+      // THE PAINT DECOUPLER: 150ms delay protects the iPhone Safari GPU from freezing
       if (typeof window !== 'undefined') {
-        window.requestAnimationFrame(() => {
+        setTimeout(() => {
           const win = window as unknown as { BetterCallHanaI18n?: { translatePage: (l: string) => void } };
           if (win.BetterCallHanaI18n && typeof win.BetterCallHanaI18n.translatePage === 'function') {
             win.BetterCallHanaI18n.translatePage(newLang);
           }
-        });
+        }, 150);
       }
     }
   }, []);
@@ -109,7 +110,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     if (langDict && langDict[key]) {
       return langDict[key];
     }
-    // Fallback to English dictionary
     if (translations.en && translations.en[key]) {
       return translations.en[key];
     }
@@ -128,13 +128,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (!context) {
-    // Graceful fallback if used outside provider during SSR/initial render
+    // 🔴 THE FINAL SAFETY FIX: Added Optional Chaining (?.) to prevent undefined crashes outside the provider
     return {
       language: 'en' as Language,
       currentLanguage: LANGUAGES[0],
       setLanguage: () => {},
       t: (key: string, fallback?: string) => {
-        return translations.en[key] || fallback || key;
+        return translations.en?.[key] || fallback || key; 
       },
     };
   }

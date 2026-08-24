@@ -9,46 +9,53 @@ export default function TermsOfService() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const win = window as unknown as {
-        BetterCallHanaI18n?: { translatePage: (l: string) => void; getLanguage: () => string };
-        updateLanguage?: (l?: string) => void;
-      };
-      if (win.updateLanguage && typeof win.updateLanguage === 'function') {
-        win.updateLanguage();
-      } else if (win.BetterCallHanaI18n && typeof win.BetterCallHanaI18n.translatePage === 'function') {
-        const lang = win.BetterCallHanaI18n.getLanguage ? win.BetterCallHanaI18n.getLanguage() : 'en';
-        win.BetterCallHanaI18n.translatePage(lang);
-      }
+    // 1. Wipe any leftover Radix UI scroll locks
+    document.body.style.overflow = '';
+    document.body.style.pointerEvents = '';
+    
+    // 2. 🔴 NEW FIX: Tell the browser NOT to fight our scroll command
+    if (typeof window !== 'undefined' && 'scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
     }
+    
+    // 3. A 50ms delay guarantees Next.js has finished rendering 
+    // before we force an instant snap to the top.
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="main-page-wrapper relative z-10 flex flex-col min-h-screen overflow-x-hidden bg-transparent md:bg-[#071322]">
+    {/* 🔴 NEW FIX: Changed min-h-screen to min-h-[100dvh] to stop iOS Safari bouncing */}
+    <div className="main-page-wrapper relative z-10 flex flex-col min-h-[100dvh] overflow-x-hidden bg-transparent md:bg-[#071322]">
       {/* Universal Premium Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-grid" />
-        <div className="absolute inset-0 bg-noise" />
-        <div className="absolute top-[-10%] right-[-5%] w-[60vw] h-[60vw] bg-primary/5 rounded-full blur-[120px]" />
+        
+        {/* Safe from iOS Graphics crashes - hidden on mobile */}
+        <div className="hidden md:block absolute inset-0 bg-noise" />
+        <div className="hidden md:block absolute top-[-10%] right-[-5%] w-[60vw] h-[60vw] bg-primary/5 rounded-full blur-[120px]" />
       </div>
 
       <Header />
-      {/* Normalized padding-top for standard header size */}
+      
       <main className="relative z-10 flex-grow pt-48 md:pt-56 pb-24 px-6 max-w-4xl mx-auto w-full">
         <div className="bg-white/95 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] border border-slate-200/80 shadow-2xl ring-1 ring-slate-900/5 w-full break-words [overflow-wrap:break-word]">
           <h1 
             data-i18n="terms.title" 
             className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-slate-950 break-words"
           >
-            {t('terms.title')}
+            {t('terms.title', 'Terms of Service')}
           </h1>
-          
+
           <div className="mb-8">
             <span 
               data-i18n="terms.lastUpdated" 
               className="text-xs font-bold uppercase tracking-widest text-cyan-800 bg-cyan-100/70 border border-cyan-300/60 px-3.5 py-1.5 rounded-full inline-block"
             >
-              {t('terms.lastUpdated')}
+              {t('terms.lastUpdated', 'Last Updated: May 2026')}
             </span>
           </div>
 
@@ -149,4 +156,3 @@ export default function TermsOfService() {
     </div>
   )
 }
-

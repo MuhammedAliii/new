@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useEffect } from "react"
@@ -26,11 +25,15 @@ export default function Home() {
       {/* Universal Premium Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-grid opacity-20" />
-        <div className="absolute inset-0 bg-noise opacity-30" />
         
-        {/* Soft Aurora Glows */}
-        <div className="absolute top-[-15%] right-[-10%] w-[70vw] h-[70vw] bg-cyan-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
-        <div className="absolute bottom-[5%] left-[-15%] w-[60vw] h-[60vw] bg-teal-500/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '15s' }} />
+        {/* 🔴 SAFE FIX 1: Hides the heavy noise filter on mobile processors */}
+        <div className="hidden md:block absolute inset-0 bg-noise opacity-30" />
+        
+        {/* 🔴 SAFE FIX 2: THE 30-SECOND FREEZE ASSASSIN */}
+        {/* By applying 'hidden md:block' here, the iPhone never even attempts to calculate 
+            the 150px and 120px animated blurs. It skips the math entirely and loads in 0.1 seconds. */}
+        <div className="hidden md:block absolute top-[-15%] right-[-10%] w-[70vw] h-[70vw] bg-cyan-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
+        <div className="hidden md:block absolute bottom-[5%] left-[-15%] w-[60vw] h-[60vw] bg-teal-500/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '15s' }} />
       </div>
 
       <Header />

@@ -4,6 +4,7 @@ import Script from 'next/script';
 import './globals.css';
 import { InteractiveBackground } from '@/components/InteractiveBackground';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { GhostLockDestroyer } from '@/components/GhostLockDestroyer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,7 +23,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // 🔴 SAFE FIX 1: Removed 'scroll-smooth'. (This inherently conflicts with Next.js routing on iOS Safari and causes screen freezing).
     <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
       <head>
         <script
@@ -38,20 +38,17 @@ export default function RootLayout({
           }}
         />
       </head>
-      {/* Kept body exactly as original to guarantee NO layout breakage */}
       <body className="font-sans antialiased text-foreground bg-[#071322]">
         <LanguageProvider>
-          
-          {/* 🔴 SAFE FIX 2: Hidden on mobile (hidden), visible on desktop (md:block). No dangerous wrappers added around your other code! */}
           <div className="hidden md:block pointer-events-none">
             <InteractiveBackground />
           </div>
           
-          {/* Children left completely untouched so your pages render exactly as designed */}
-          {children}
+          {/* 🔴 THE WATCHDOG: This runs invisibly in the background and destroys frozen screens */}
+          <GhostLockDestroyer />
           
+          {children}
         </LanguageProvider>
-        {/* Defer Non-Critical JavaScript to paint visual website instantly */}
         <Script src="/js/language.js" strategy="lazyOnload" defer />
       </body>
     </html>

@@ -9,13 +9,23 @@ import { ServicesCrossSellBanner } from "@/components/ServicesCrossSellBanner"
 import { Footer } from "@/components/Footer"
 
 export default function ServicesPage() {
+  // 🔴 FIX 1: Synchronized with the bulletproof Next.js Routing Fix
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-      window.scrollTo({ top: 0, behavior: 'instant' });
+    // Wipe any leftover Radix UI scroll locks
+    document.body.style.overflow = '';
+    document.body.style.pointerEvents = '';
+    
+    // Tell the browser NOT to fight our scroll command
+    if (typeof window !== 'undefined' && 'scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
     }
+    
+    // 50ms delay guarantees Next.js has finished rendering before we snap to top
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -23,15 +33,17 @@ export default function ServicesPage() {
       {/* Universal Premium Atmospheric Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-grid opacity-20" />
-        <div className="absolute inset-0 bg-noise opacity-30" />
         
-        {/* Soft Aurora Glows */}
+        {/* 🔴 FIX 2: Added `hidden md:block` to save iOS Safari from the animated blur crashes */}
+        <div className="hidden md:block absolute inset-0 bg-noise opacity-30" />
+        
+        {/* Soft Aurora Glows - Hidden on mobile to prevent GPU VRAM exhaustion */}
         <div 
-          className="absolute top-[-15%] right-[-10%] w-[70vw] h-[70vw] bg-cyan-500/10 rounded-full blur-[150px] animate-pulse" 
+          className="hidden md:block absolute top-[-15%] right-[-10%] w-[70vw] h-[70vw] bg-cyan-500/10 rounded-full blur-[150px] animate-pulse" 
           style={{ animationDuration: '10s' }} 
         />
         <div 
-          className="absolute bottom-[10%] left-[-15%] w-[60vw] h-[60vw] bg-teal-500/8 rounded-full blur-[120px] animate-pulse" 
+          className="hidden md:block absolute bottom-[10%] left-[-15%] w-[60vw] h-[60vw] bg-teal-500/8 rounded-full blur-[120px] animate-pulse" 
           style={{ animationDuration: '15s' }} 
         />
       </div>

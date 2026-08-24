@@ -3,26 +3,24 @@
  * 
  * Standard document.body.style.overflow = 'hidden' causes severe layout thrashing
  * and freezes on iOS WebKit due to rubber-banding.
- * 
- * This utility implements the iOS Fixed Body pattern:
- * - Records window.scrollY
- * - Sets body to position: fixed; width: 100%; top: -${scrollY}px
- * - Restores position and scroll position smoothly upon release.
  */
 
 let scrollY = 0;
-let activeLocks = 0;
 
 export function lockScroll() {
   if (typeof window === "undefined" || typeof document === "undefined") return;
   
-  activeLocks++;
-  if (activeLocks > 1) return; // Already locked by another dialog
+  const body = document.body;
+  const docEl = document.documentElement;
+
+  // 🔴 FIX 1: Read the actual HTML DOM instead of a fake JS counter. 
+  // This guarantees it never gets permanently out of sync with the GhostLockDestroyer.
+  if (body.hasAttribute("data-scroll-locked")) return; 
 
   scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
   
-  const body = document.body;
-  const docEl = document.documentElement;
+  // 🔴 FIX 2: Calculate the scrollbar width so the website doesn't jump horizontally!
+  const scrollBarWidth = window.innerWidth - docEl.clientWidth;
 
   if (body) {
     body.style.position = "fixed";
@@ -32,6 +30,12 @@ export function lockScroll() {
     body.style.width = "100%";
     body.style.overflow = "hidden";
     body.style.touchAction = "none";
+    
+    // Apply padding to replace the missing scrollbar
+    if (scrollBarWidth > 0) {
+      body.style.paddingRight = `${scrollBarWidth}px`;
+    }
+    
     body.setAttribute("data-scroll-locked", "true");
   }
   if (docEl) {
@@ -41,41 +45,33 @@ export function lockScroll() {
 }
 
 export function unlockScroll() {
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-  
-  if (activeLocks > 0) {
-    activeLocks--;
-  }
-  
-  if (activeLocks > 0) return; // Other modals still open
-
-  executeUnlock();
+  executeUnlock(false);
 }
 
-// 🔴 THE FIX: Nuclear global unlock. 
-// If Next.js routing breaks the activeLocks counter, this physically forces the screen to unlock.
-export function clearAllScrollLocks() {
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-  activeLocks = 0;
-  executeUnlock();
+export function clearAllScrollLocks(skipScrollRestore = true) {
+  executeUnlock(skipScrollRestore);
 }
 
 // The core unlock logic separated so it can be called safely
-function executeUnlock() {
+function executeUnlock(skipScrollRestore: boolean) {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
   const body = document.body;
   const docEl = document.documentElement;
 
+  // If it's not actually locked, do nothing.
+  if (!body || !body.hasAttribute("data-scroll-locked")) return;
+
   let targetScrollY = scrollY;
-  if (body && body.style.top) {
+  if (body.style.top) {
     const parsed = parseInt(body.style.top, 10);
     if (!isNaN(parsed)) {
       targetScrollY = Math.abs(parsed);
     }
   }
 
+  // 🔴 FIX 3: Completely clear all inline styles, including the scrollbar padding.
   if (body) {
-    // 🔴 THE FIX: Fully clear all inline styles instead of setting "auto"
-    // This stops our JS from fighting your Tailwind CSS framework
     body.style.position = "";
     body.style.top = "";
     body.style.left = "";
@@ -85,21 +81,18 @@ function executeUnlock() {
     body.style.touchAction = "";
     body.style.pointerEvents = ""; 
     body.style.cursor = "";
-
-    if (body.hasAttribute("data-scroll-locked")) {
-      body.removeAttribute("data-scroll-locked");
-    }
+    body.style.paddingRight = ""; // Wipe the layout jump compensation
+    body.removeAttribute("data-scroll-locked");
   }
 
   if (docEl) {
     docEl.style.overflow = "";
     docEl.style.pointerEvents = "";
-    
-    if (docEl.hasAttribute("data-scroll-locked")) {
-      docEl.removeAttribute("data-scroll-locked");
-    }
+    docEl.removeAttribute("data-scroll-locked");
   }
 
-  // Restore the scroll position exactly where the user left off
-  window.scrollTo(0, targetScrollY);
+  // Only restore the scroll position if we are NOT changing pages
+  if (!skipScrollRestore) {
+    window.scrollTo({ top: targetScrollY, behavior: 'instant' });
+  }
 }

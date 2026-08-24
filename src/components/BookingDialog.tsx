@@ -24,15 +24,19 @@ export function BookingDialog({
   const EMAIL = "info@bettercallhana.com"
   const PHONE = "+13109062504"
 
-  // 🔴 FIX 1: Brute-force iOS cleanup when modal closes
   const handleOpenChange = (isOpen: boolean) => {
     onOpenChange(isOpen);
+    
+    // Safety Net: Just in case Radix ever tries to sneak a lock in, 
+    // we wipe it clean immediately when the pop-up closes.
     if (!isOpen) {
       setTimeout(() => {
-        document.body.style.pointerEvents = 'auto';
+        document.body.style.pointerEvents = '';
         document.body.style.overflow = '';
-        document.documentElement.style.pointerEvents = 'auto';
-        
+        document.body.style.position = '';
+        document.body.style.marginRight = '';
+        document.documentElement.style.pointerEvents = '';
+        document.documentElement.style.overflow = '';
         if (document.body.hasAttribute('data-scroll-locked')) {
           document.body.removeAttribute('data-scroll-locked');
         }
@@ -40,26 +44,31 @@ export function BookingDialog({
     }
   };
 
-  // 🔴 FIX 2: The Action Handler (Kills the Native App Freeze)
-  // Closes the modal FIRST, waits for the focus trap to die, THEN opens the link
   const handleAction = (url: string) => {
-    handleOpenChange(false); // Close modal instantly
+    // 🔴 CRITICAL FIX: Open the link instantly! 
+    // If we delay this with setTimeout, iOS Safari will flag it as spam and block the popup.
+    if (url.startsWith('http')) {
+      window.open(url, '_blank');
+    } else {
+      window.location.href = url;
+    }
     
-    setTimeout(() => {
-      if (url.startsWith('http')) {
-        window.open(url, '_blank');
-      } else {
-        window.location.href = url;
-      }
-    }, 150); // Give iPhone OS time to unlock the thread before triggering native apps
+    // Close the modal immediately after triggering the link
+    handleOpenChange(false); 
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      {/* 🔴 FIX 3: Prevent iOS focus trap loops on mount/unmount */}
+    {/* 🔴 THE SILVER BULLET: modal={false} 
+        This completely revokes Radix UI's permission to lock the iPhone screen. */}
+    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent 
         onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => e.preventDefault()}
+        // Manually close the dialog if the user taps the background outside
+        onInteractOutside={(e) => {
+          e.preventDefault();
+          handleOpenChange(false);
+        }}
         className="w-[90vw] sm:w-[90%] max-w-[420px] rounded-[24px] p-0 border border-cyan-500/30 shadow-[0_25px_90px_-15px_rgba(2,8,16,0.95)] overflow-hidden bg-[#08182b] md:bg-gradient-to-b md:from-[#08182b]/95 md:via-[#0b223a]/95 md:to-[#071526]/95 md:backdrop-blur-3xl text-white"
       >
         {/* Subtle Ambient Celestial Glow */}

@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+// 🔴 FIX 1: Import useRouter to restore Single-Page-Application speeds
+import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { BookingDialog } from "./BookingDialog"
@@ -12,11 +13,13 @@ import Image from "next/image"
 import myLogo from "@/assets/3.png"
 import { Menu, X, ArrowRight, Sparkles } from "lucide-react"
 
-import { lockScroll, unlockScroll } from "@/lib/scrollLock"
+import { lockScroll, unlockScroll, clearAllScrollLocks } from "@/lib/scrollLock"
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter(); // 🔴 Initialize the Next.js router
   const { t } = useLanguage();
+  
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,15 +29,17 @@ export function Header() {
   const isServicesPage = pathname === "/services";
   const isLightSection = false;
 
-  // Prevent background scroll when mobile menu is open using iOS Fixed Body pattern
   useEffect(() => {
+    // 🔴 FIX 2: Let this single useEffect act as the master controller for the mobile menu.
+    // It prevents double-firing of unlock commands.
     if (isMobileMenuOpen) {
       lockScroll();
     } else {
       unlockScroll();
     }
     return () => {
-      unlockScroll();
+      // If the page changes, aggressively wipe locks without jumping the screen
+      clearAllScrollLocks(true); 
     };
   }, [isMobileMenuOpen]);
 
@@ -42,28 +47,30 @@ export function Header() {
     setIsVisible(true);
   }, []);
 
-  // 🔴 FIX 1: Safe iOS Routing Delay. 
-  // We MUST wait 150ms for the scroll lock to successfully release before telling the browser to navigate, otherwise the new page loads permanently frozen.
-  const handleMobileNavHardRedirect = (url: string) => {
+  // 🔴 FIX 3: The Flawless Next.js Mobile Routing
+  const handleMobileNavRoute = (url: string) => {
     setIsMobileMenuOpen(false);
-    unlockScroll();
     
+    // Wipe the lock instantly but DO NOT restore scroll position,
+    // otherwise it will fight Next.js trying to scroll to the new section.
+    clearAllScrollLocks(true);
+    
+    // Give the DOM 150ms to recalculate its un-locked coordinates, 
+    // then use Next.js router for a lightning-fast, refresh-free jump!
     setTimeout(() => {
-      if (typeof window !== "undefined") {
-        window.location.assign(url);
-      }
+      router.push(url);
     }, 150);
   };
 
   const handleLogoClick = () => {
     setIsMobileMenuOpen(false);
-    unlockScroll();
+    clearAllScrollLocks(true); 
     setActiveSection("");
   };
 
   const handleNavClick = (_e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     setIsMobileMenuOpen(false);
-    unlockScroll();
+    clearAllScrollLocks(true); 
     setActiveSection(id);
   };
 
@@ -72,11 +79,9 @@ export function Header() {
       <header 
         id="main-header"
         className="fixed top-0 left-0 right-0 w-full z-50 py-4 md:py-7 bg-transparent backdrop-blur-none border-none shadow-none transition-none md:transition-all md:duration-500 ease-in-out"
-        style={{ backgroundColor: 'transparent', border: 'none', boxShadow: 'none', backdropFilter: 'none' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between lg:flex-col lg:items-center gap-2 md:gap-5 relative z-10 transition-all duration-500 ease-in-out">
           
-          {/* Logo - Positioned left on mobile, centered at top on desktop */}
           <div className={`transition-all duration-700 ease-out transform shrink-0 flex-shrink-0 header-logo-wrapper ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-95'}`}>
             <Link 
               href="/" 
@@ -85,7 +90,6 @@ export function Header() {
               id="header-logo-link"
               className="group relative block transition-transform duration-300 ease-in-out hover:scale-[1.03] active:scale-95 shrink-0 flex-shrink-0 brand-logo touch-manipulation"
             >
-              {/* Soft luminous neon cyan ambient aura on hover */}
               <div className={`absolute -inset-3 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out pointer-events-none ${
                 isLightSection ? "bg-cyan-500/15" : "bg-cyan-400/20"
               }`} />
@@ -107,8 +111,6 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Desktop Navigation - Centered Underneath */}
-          {/* 🔴 FIX 2: Added prefetch={false} to all desktop links to stop background VRAM exhaustion */}
           <div className={`hidden lg:flex items-center gap-4 md:gap-6 transition-all duration-500 delay-150 transform ease-in-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}`}>
             <nav 
               id="main-nav-bar"
@@ -318,13 +320,10 @@ export function Header() {
             : "hidden opacity-0 pointer-events-none"
         }`}
       >
-        {/* 🔴 FIX 3: Removed the undefined 'bruteForceUnlockBody()' crash! */}
+        {/* 🔴 FIX 4: Removed manual unlock calls, the useEffect handles it cleanly! */}
         <div 
           className="absolute inset-0 bg-[#061220]"
-          onClick={() => {
-            setIsMobileMenuOpen(false);
-            unlockScroll();
-          }}
+          onClick={() => setIsMobileMenuOpen(false)}
         />
 
         <div className="relative z-50 flex flex-col justify-between h-full pt-28 pb-10 px-6 sm:px-8">
@@ -351,7 +350,7 @@ export function Header() {
               data-i18n="nav.process"
               onClick={(e) => {
                 e.preventDefault();
-                handleMobileNavHardRedirect("/#how-it-works");
+                handleMobileNavRoute("/#how-it-works");
               }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 activeSection === "how-it-works"
@@ -369,7 +368,7 @@ export function Header() {
               data-i18n="nav.services"
               onClick={(e) => {
                 e.preventDefault();
-                handleMobileNavHardRedirect("/services");
+                handleMobileNavRoute("/services");
               }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 isServicesPage
@@ -384,13 +383,12 @@ export function Header() {
               <span className="text-xs text-cyan-400/70 font-mono">02</span>
             </a>
 
-            {/* 🔴 FIX 4: Removed undefined function here too */}
             <button
               id="mobile-nav-live-demo"
               data-i18n="nav.liveDemo"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                unlockScroll();
+                // The useEffect will restore scroll because they stay on the current page
                 setTimeout(() => setIsVideoOpen(true), 150);
               }}
               className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 transition-none active:scale-[0.98] text-left cursor-pointer touch-manipulation"
@@ -405,7 +403,7 @@ export function Header() {
               data-i18n="nav.impact"
               onClick={(e) => {
                 e.preventDefault();
-                handleMobileNavHardRedirect("/#business-impact");
+                handleMobileNavRoute("/#business-impact");
               }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 activeSection === "business-impact"
@@ -423,7 +421,7 @@ export function Header() {
               data-i18n="nav.contact"
               onClick={(e) => {
                 e.preventDefault();
-                handleMobileNavHardRedirect("/#contact");
+                handleMobileNavRoute("/#contact");
               }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 activeSection === "contact"
@@ -437,7 +435,6 @@ export function Header() {
           </div>
 
           <div className="max-w-sm mx-auto w-full space-y-4 pt-4 border-t border-white/10">
-            {/* 🔴 FIX 5: Cleaned up the undefined crash on this button */}
             <Button
               id="mobile-menu-book-consult-btn"
               data-i18n="nav.bookDiscovery"
@@ -445,7 +442,6 @@ export function Header() {
               className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.4)] active:scale-95 transition-all border border-cyan-200/50 flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                unlockScroll();
                 setTimeout(() => setIsBookingOpen(true), 150);
               }}
             >

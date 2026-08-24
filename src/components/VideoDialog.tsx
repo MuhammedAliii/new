@@ -28,15 +28,17 @@ export function VideoDialog({
   const audioRef = React.useRef<HTMLAudioElement | null>(null)
   const barCount = 32
 
-  // 🔴 FIX 1: Brute-force iOS cleanup when the video modal closes normally
   const handleOpenChange = (isOpen: boolean) => {
     onOpenChange(isOpen);
+    
     if (!isOpen) {
       setTimeout(() => {
-        document.body.style.pointerEvents = 'auto';
+        document.body.style.pointerEvents = '';
         document.body.style.overflow = '';
-        document.documentElement.style.pointerEvents = 'auto';
-        
+        document.body.style.position = '';
+        document.body.style.marginRight = '';
+        document.documentElement.style.pointerEvents = '';
+        document.documentElement.style.overflow = '';
         if (document.body.hasAttribute('data-scroll-locked')) {
           document.body.removeAttribute('data-scroll-locked');
         }
@@ -44,13 +46,20 @@ export function VideoDialog({
     }
   };
 
-  // 🔴 FIX 2: Safe Native App Trigger for the "Call Live" button
   const handleAction = (url: string) => {
-    handleOpenChange(false); 
-    
-    setTimeout(() => {
-      window.location.href = url;
-    }, 150);
+    // 🔴 THE SPLIT-LOGIC FIX:
+    if (url.startsWith('http')) {
+      // 1. Web links MUST be instant to bypass iOS Popup Blockers
+      window.open(url, '_blank');
+      handleOpenChange(false); 
+    } else {
+      // 2. Native App links (tel:, mailto:) MUST be delayed so Safari doesn't 
+      // halt the Javascript thread before the modal finishes closing.
+      handleOpenChange(false); 
+      setTimeout(() => {
+        window.location.href = url;
+      }, 150);
+    }
   };
 
   const togglePlay = () => {
@@ -95,7 +104,6 @@ export function VideoDialog({
     setCurrentTime(0)
   }
 
-  // Stop audio when dialog closes or auto-play on open
   React.useEffect(() => {
     if (!open) {
       setIsPlaying(false)
@@ -115,14 +123,15 @@ export function VideoDialog({
     }
   }, [open])
 
-  // 🔴 FIX 5: THE NUCLEAR UNMOUNT FAILSAFE
-  // Guarantees the iPhone screen unlocks if the user hits the browser "Back" arrow
   React.useEffect(() => {
     return () => {
       if (typeof document !== "undefined") {
-        document.body.style.pointerEvents = 'auto';
+        document.body.style.pointerEvents = '';
         document.body.style.overflow = '';
-        document.documentElement.style.pointerEvents = 'auto';
+        document.body.style.position = '';
+        document.body.style.marginRight = '';
+        document.documentElement.style.pointerEvents = '';
+        document.documentElement.style.overflow = '';
         if (document.body.hasAttribute('data-scroll-locked')) {
           document.body.removeAttribute('data-scroll-locked');
         }
@@ -137,11 +146,14 @@ export function VideoDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      {/* 🔴 FIX 3: Prevent iOS focus trap loops */}
+    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent 
         onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => e.preventDefault()}
+        onInteractOutside={(e) => {
+          e.preventDefault();
+          handleOpenChange(false);
+        }}
         className="w-[90vw] sm:w-[90%] max-w-[540px] rounded-[24px] p-0 border border-cyan-500/30 shadow-[0_30px_100px_-15px_rgba(2,8,16,0.95)] overflow-hidden bg-[#08182b] md:bg-gradient-to-b md:from-[#08182b] md:via-[#091f35] md:to-[#061423] md:backdrop-blur-3xl text-white"
       >
         <audio 
@@ -221,9 +233,10 @@ export function VideoDialog({
             </div>
 
             <div className="w-full relative z-10 space-y-1.5 pt-1">
+              {/* 🔴 IPHONE TOUCH FIX: onPointerDown and touch-none guarantee instant scrubbing on iOS */}
               <div 
-                className="relative h-2 bg-white/10 hover:bg-white/15 rounded-full overflow-hidden cursor-pointer transition-colors touch-manipulation"
-                onClick={(e) => {
+                className="relative h-2 bg-white/10 hover:bg-white/15 rounded-full overflow-hidden cursor-pointer transition-colors touch-none"
+                onPointerDown={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect()
                   const clickX = e.clientX - rect.left
                   const newProgress = Math.max(0, Math.min(1, clickX / rect.width))
@@ -298,7 +311,6 @@ export function VideoDialog({
             </div>
 
             <div className="flex justify-end">
-              {/* 🔴 FIX 4: Safe Trigger for the Dialer App */}
               <Button
                 variant="outline"
                 className="rounded-full px-2.5 sm:px-3.5 min-h-8 sm:min-h-9 h-auto py-1 text-[11px] font-bold bg-white/[0.05] border-cyan-500/30 text-cyan-300 hover:text-white hover:bg-cyan-950/80 hover:border-cyan-400 transition-all duration-300 hidden sm:inline-flex items-center gap-1.5 cursor-pointer touch-manipulation text-center whitespace-normal leading-snug"

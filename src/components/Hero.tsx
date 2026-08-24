@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -51,7 +50,7 @@ export function Hero() {
 
       {/* CENTRAL ECLIPSE SHADOW & LOCKED CONTENT UNIT (Single Bound Container) */}
       <div 
-        className="relative flex items-center justify-center aspect-square w-[min(90vw,340px)] sm:w-[480px] md:w-[640px] lg:w-[750px] xl:w-[840px] rounded-full z-10"
+        className="relative flex items-center justify-center aspect-square w-[min(90vw,340px)] sm:w-[480px] md:w-[640px] lg:w-[750px] xl:w-[840px] rounded-full z-10 mx-auto"
         style={{ aspectRatio: "1 / 1", borderRadius: "50%" }}
       >
         
@@ -70,13 +69,14 @@ export function Hero() {
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/[0.02] to-sky-300/[0.04]" />
         </div>
 
-        {/* Rotating Precision LED Border Lights Ring (Infinite Linear Orbital Animation) */}
+        {/* Rotating Precision LED Border Lights Ring */}
         <div 
           className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none z-[2] animate-orbit-spin"
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", borderRadius: "50%", animation: "spin 50s linear infinite" }}
         >
+          {/* 🔴 FIX: Changed overflow-visible to overflow-hidden. Visible overflow on SVGs creates phantom width on iOS and causes crashes */}
           <svg 
-            className="w-full h-full overflow-visible" 
+            className="w-full h-full overflow-hidden" 
             viewBox="0 0 1000 1000" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@ export function Hero() {
               strokeDasharray="4 8"
             />
 
-            {/* Exact Ring of 64 Mathematically Positioned Glowing LED Points (Vector Optimized for WebKit/iOS) */}
+            {/* Exact Ring of 64 Mathematically Positioned Glowing LED Points */}
             {LED_POINTS.map((point) => (
               <g key={point.index}>
                 {/* Soft vector ambient halo */}
@@ -115,12 +115,13 @@ export function Hero() {
           </svg>
         </div>
 
-        {/* Concentric Subtle Inner Coordinate Ring (Counter-rotating 100s) */}
+        {/* Concentric Subtle Inner Coordinate Ring */}
         <div 
           className="absolute top-0 left-0 w-full h-full rounded-full opacity-30 pointer-events-none z-[2] animate-orbit-spin-reverse"
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", borderRadius: "50%", animation: "spin 100s linear infinite reverse" }}
         >
-          <svg className="w-full h-full overflow-visible" viewBox="0 0 1000 1000" fill="none">
+          {/* 🔴 FIX: overflow-hidden */}
+          <svg className="w-full h-full overflow-hidden" viewBox="0 0 1000 1000" fill="none">
             <circle 
               cx="500" 
               cy="500" 
@@ -132,8 +133,10 @@ export function Hero() {
           </svg>
         </div>
 
-        {/* LOCKED FOREGROUND CONTENT - OPTICALLY CENTERED (-52% Y-Translate) */}
-        <div className="hero-eclipse-content absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[52%] z-10 w-[82%] max-w-[270px] sm:w-full sm:max-w-[420px] md:max-w-[540px] lg:max-w-[640px] xl:max-w-[700px] flex flex-col items-center justify-center text-center gap-1.5 xs:gap-2 sm:gap-4 md:gap-5 m-0 p-0 pointer-events-auto">
+        {/* 🔴 THE FIX: LOCKED FOREGROUND CONTENT - NATIVE FLEXBOX CENTERING */}
+        {/* Removed 'absolute top-1/2 left-1/2 -translate-x-1/2'. Converted to 'relative mx-auto -translate-y-2'. This guarantees flawless dead-center math on iOS. */}
+        <div className="hero-eclipse-content relative z-10 w-[82%] max-w-[270px] sm:w-full sm:max-w-[420px] md:max-w-[540px] lg:max-w-[640px] xl:max-w-[700px] flex flex-col items-center justify-center text-center gap-1.5 xs:gap-2 sm:gap-4 md:gap-5 m-0 p-0 pointer-events-auto mx-auto -translate-y-2 sm:-translate-y-4">
+          
           {/* Premium Pill Badge */}
           <div className={`m-0 inline-flex items-center text-center px-2.5 py-0.5 sm:px-5 sm:py-2 rounded-full bg-white/[0.06] backdrop-blur-xl border border-cyan-400/30 text-cyan-300 text-[7px] xs:text-[8px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-[0.14em] sm:tracking-[0.22em] shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'}`}>
             <span data-i18n="hero.badge" className="text-center break-words">{t('hero.badge', 'Gold Standard AI Reception')}</span>
@@ -157,11 +160,12 @@ export function Hero() {
             {/* Luminous ambient aura on hover */}
             <div className="absolute -inset-3 bg-gradient-to-r from-teal-400/40 via-cyan-400/40 to-sky-400/40 rounded-full blur-xl opacity-40 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
+            {/* 🔴 FIX: Added 'touch-manipulation' to stop iOS 300ms tap delay freezing */}
             <Button 
               id="hero-book-demo-btn"
               data-i18n="hero.cta"
               size="lg" 
-              className="relative overflow-hidden rounded-full px-4 xs:px-6 sm:px-9 md:px-11 py-1.5 xs:py-2 sm:py-3.5 md:py-4 min-h-[2rem] xs:min-h-[2.25rem] sm:min-h-[3.25rem] md:min-h-[3.5rem] h-auto text-[10px] xs:text-[11px] sm:text-sm md:text-base font-bold bg-gradient-to-r from-teal-400 via-cyan-300 to-teal-400 text-slate-950 shadow-[0_0_25px_rgba(34,211,238,0.4)] hover:shadow-[0_0_35px_rgba(34,211,238,0.7)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] group/btn border border-cyan-100/40 cursor-pointer text-center whitespace-normal leading-tight sm:leading-snug"
+              className="relative overflow-hidden rounded-full px-4 xs:px-6 sm:px-9 md:px-11 py-1.5 xs:py-2 sm:py-3.5 md:py-4 min-h-[2rem] xs:min-h-[2.25rem] sm:min-h-[3.25rem] md:min-h-[3.5rem] h-auto text-[10px] xs:text-[11px] sm:text-sm md:text-base font-bold bg-gradient-to-r from-teal-400 via-cyan-300 to-teal-400 text-slate-950 shadow-[0_0_25px_rgba(34,211,238,0.4)] hover:shadow-[0_0_35px_rgba(34,211,238,0.7)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] group/btn border border-cyan-100/40 cursor-pointer touch-manipulation text-center whitespace-normal leading-tight sm:leading-snug"
               onClick={() => setIsBookingOpen(true)}
             >
               {/* Shimmer light sweep */}
@@ -189,4 +193,3 @@ export function Hero() {
     </section>
   )
 }
-

@@ -13,31 +13,6 @@
 let scrollY = 0;
 let activeLocks = 0;
 
-export function lockScroll() {
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-  
-  activeLocks++;
-  if (activeLocks > 1) return; // Already locked by another dialog
-
-  scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-  
-  const body = document.body;
-  const docEl = document.documentElement;
-
-  if (body) {
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
-    body.style.overflow = "hidden";
-    body.style.touchAction = "none";
-  }
-  if (docEl) {
-    docEl.style.overflow = "hidden";
-  }
-}
-
 export function unlockScroll() {
   if (typeof window === "undefined" || typeof document === "undefined") return;
   
@@ -66,6 +41,11 @@ export function unlockScroll() {
     body.style.width = "";
     body.style.overflow = "";
     body.style.touchAction = "";
+    
+    // 🔴 THE FIX: FORCE iOS TO ALLOW CLICKS AGAIN
+    body.style.pointerEvents = "auto"; 
+    body.style.cursor = "auto";
+
     if (body.hasAttribute("data-scroll-locked")) {
       body.removeAttribute("data-scroll-locked");
     }
@@ -73,10 +53,13 @@ export function unlockScroll() {
 
   if (docEl) {
     docEl.style.overflow = "";
+    // 🔴 THE FIX: UNLOCK THE HTML ROOT
+    docEl.style.pointerEvents = "auto";
     if (docEl.hasAttribute("data-scroll-locked")) {
       docEl.removeAttribute("data-scroll-locked");
     }
   }
 
+  // Restore scroll position
   window.scrollTo(0, targetScrollY);
 }

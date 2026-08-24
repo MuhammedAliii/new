@@ -98,24 +98,25 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between lg:flex-col lg:items-center gap-2 md:gap-5 relative z-10 transition-all duration-500 ease-in-out">
           
           {/* Logo - Positioned left on mobile, centered at top on desktop */}
-          <div className={`transition-all duration-700 ease-out transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-95'}`}>
+          <div className={`transition-all duration-700 ease-out transform shrink-0 flex-shrink-0 header-logo-wrapper ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-95'}`}>
             <Link 
               href="/" 
               onClick={handleLogoClick}
               id="header-logo-link"
-              className="group relative block transition-transform duration-300 ease-in-out hover:scale-[1.03] active:scale-95"
+              className="group relative block transition-transform duration-300 ease-in-out hover:scale-[1.03] active:scale-95 shrink-0 flex-shrink-0 brand-logo"
             >
               {/* Soft luminous neon cyan ambient aura on hover */}
               <div className={`absolute -inset-3 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out pointer-events-none ${
                 isLightSection ? "bg-cyan-500/15" : "bg-cyan-400/20"
               }`} />
               
-              <div className="relative w-[135px] h-[38px] sm:w-[160px] sm:h-[46px] md:w-[220px] md:h-[60px] flex items-center justify-center">
+              <div className="relative w-[135px] h-[38px] sm:w-[160px] sm:h-[46px] md:w-[220px] md:h-[60px] flex items-center justify-center shrink-0 flex-shrink-0 header-logo">
                 <Image 
                   src={myLogo} 
                   alt="Better Call Hana" 
-                  fill
-                  className={`object-contain transition-all duration-500 ease-in-out ${
+                  width={220}
+                  height={60}
+                  className={`object-contain transition-all duration-500 ease-in-out header-logo shrink-0 flex-shrink-0 ${
                     isLightSection
                       ? "brightness-0 opacity-90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.15)] group-hover:opacity-100" 
                       : "brightness-0 invert drop-shadow-[0_2px_14px_rgba(34,211,238,0.35)] group-hover:drop-shadow-[0_4px_22px_rgba(34,211,238,0.65)]"

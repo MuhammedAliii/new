@@ -46,6 +46,7 @@
     scroll-behavior: smooth;
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    text-rendering: auto !important;
   }
 
   body {
@@ -55,10 +56,25 @@
     max-width: 100vw;
     min-height: 100dvh;
     position: relative;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: auto !important;
   }
 
   /* Universal Media & Control Bounds */
   img, svg, video, canvas, audio, iframe {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Edge/Bing Logo Fix (Flex-Shrink Protection) */
+  .header-logo,
+  .brand-logo,
+  .brand-logo img,
+  .brand-logo svg,
+  .header-logo img,
+  .header-logo svg {
+    flex-shrink: 0 !important;
     max-width: 100%;
     height: auto;
     display: block;
@@ -69,8 +85,9 @@
     box-sizing: border-box;
   }
 
-  /* 2. Refined Fluid Typography with CSS clamp() for narrow mobile to 4K displays */
+  /* 2. Refined Fluid Typography with Huawei Fallback & CSS clamp() */
   h1 {
+    font-size: 2.5rem; /* Huawei Fallback */
     font-size: clamp(1.45rem, 5vw + 0.25rem, 4rem);
     line-height: 1.15;
     letter-spacing: -0.025em;
@@ -79,6 +96,7 @@
   }
 
   h2 {
+    font-size: 2rem; /* Huawei Fallback */
     font-size: clamp(1.25rem, 3.5vw + 0.2rem, 3rem);
     line-height: 1.2;
     letter-spacing: -0.02em;
@@ -87,6 +105,7 @@
   }
 
   h3 {
+    font-size: 1.35rem; /* Huawei Fallback */
     font-size: clamp(1.05rem, 2vw + 0.15rem, 1.75rem);
     line-height: 1.25;
     letter-spacing: -0.015em;
@@ -131,28 +150,36 @@
 
 /* Fluid Layouts, Grids & Responsive Utilities */
 @layer utilities {
-  /* Fluid Section Spacing with mobile-safe clamp() */
+  /* Fluid Section Spacing with Huawei Fallback & clamp() */
   .fluid-py-section {
+    padding-top: 5rem; /* Huawei Fallback */
     padding-top: clamp(3.5rem, 7vw, 8rem);
+    padding-bottom: 5rem; /* Huawei Fallback */
     padding-bottom: clamp(3.5rem, 7vw, 8rem);
   }
 
   .fluid-py-hero {
+    padding-top: 7rem; /* Huawei Fallback */
     padding-top: clamp(5.5rem, 10vw, 10rem);
+    padding-bottom: 4.5rem; /* Huawei Fallback */
     padding-bottom: clamp(3.5rem, 6vw, 6.5rem);
   }
 
   .fluid-px-container {
+    padding-left: 1.5rem; /* Huawei Fallback */
     padding-left: clamp(1rem, 4vw, 2.5rem);
+    padding-right: 1.5rem; /* Huawei Fallback */
     padding-right: clamp(1rem, 4vw, 2.5rem);
   }
 
   .fluid-gap-grid {
+    gap: 1.5rem; /* Huawei Fallback */
     gap: clamp(1rem, 2.5vw, 2.25rem);
   }
 
   /* Mobile-optimized card padding helper */
   .card-fluid-padding {
+    padding: 1.75rem; /* Huawei Fallback */
     padding: clamp(1.25rem, 3.5vw, 2.25rem);
   }
 
@@ -160,6 +187,7 @@
   .grid-responsive-3 {
     display: grid;
     grid-template-columns: 1fr;
+    gap: 1.5rem; /* Huawei Fallback */
     gap: clamp(1.25rem, 2.5vw, 2.25rem);
   }
 
@@ -179,12 +207,41 @@
   .grid-responsive-2 {
     display: grid;
     grid-template-columns: 1fr;
+    gap: 1.75rem; /* Huawei Fallback */
     gap: clamp(1.25rem, 3vw, 2.5rem);
   }
 
   @media (min-width: 768px) {
     .grid-responsive-2 {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Gradient Text Protection for Huawei & Legacy WebKit */
+  .bg-clip-text,
+  [class*="bg-clip-text"] {
+    color: #38bdf8; /* Solid color fallback before clipping */
+  }
+
+  .bg-clip-text.text-transparent,
+  [class*="bg-clip-text"].text-transparent {
+    color: #38bdf8; /* Solid color fallback before transparent fill */
+  }
+
+  @supports (-webkit-background-clip: text) or (background-clip: text) {
+    .bg-clip-text,
+    [class*="bg-clip-text"] {
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    .bg-clip-text.text-transparent,
+    [class*="bg-clip-text"].text-transparent {
+      color: transparent !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
     }
   }
 
@@ -265,7 +322,9 @@
 /* 5. Mobile screens (max-width: 768px) layout safety & breathing room */
 @media (max-width: 768px) {
   section {
+    padding-left: 1.25rem; /* Huawei Fallback */
     padding-left: clamp(1rem, 4vw, 1.5rem);
+    padding-right: 1.25rem; /* Huawei Fallback */
     padding-right: clamp(1rem, 4vw, 1.5rem);
   }
 
@@ -273,7 +332,9 @@
   .glass-card,
   [class*="rounded-[2."],
   [class*="rounded-[3."] {
+    padding-left: 1.25rem; /* Huawei Fallback */
     padding-left: clamp(1.15rem, 4vw, 1.5rem);
+    padding-right: 1.25rem; /* Huawei Fallback */
     padding-right: clamp(1.15rem, 4vw, 1.5rem);
   }
 
@@ -285,12 +346,14 @@
   }
 
   .hero-eclipse-content h1 {
+    font-size: 1.35rem !important; /* Huawei Fallback */
     font-size: clamp(1.15rem, 5.2vw, 1.65rem) !important;
     line-height: 1.12 !important;
     margin-bottom: 0 !important;
   }
 
   .hero-eclipse-content p {
+    font-size: 0.75rem !important; /* Huawei Fallback */
     font-size: clamp(0.68rem, 2.5vw, 0.82rem) !important;
     line-height: 1.25 !important;
     max-width: 230px !important;
@@ -408,5 +471,33 @@
   .blur-\[100px\],
   .blur-\[120px\] {
     display: none !important;
+  }
+
+  /* How It Works Mobile Architecture Box Width & Padding Constraint */
+  #how-it-works,
+  section#how-it-works {
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  #how-it-works-description-box,
+  section#how-it-works div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    padding: 1.25rem 1rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  #how-it-works-description-box p,
+  section#how-it-works div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) p {
+    font-size: 1rem !important; /* Huawei Fallback */
+    font-size: clamp(0.875rem, 3.8vw, 1.125rem) !important;
+    line-height: 1.6 !important;
+    word-break: break-word !important;
   }
 }

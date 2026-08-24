@@ -18,21 +18,20 @@ export function Footer() {
 
   return (
     <footer className="py-20 border-t border-cyan-500/20 bg-[#071322] flex flex-col items-center text-center px-6 relative z-10">
-      <div className="mb-8 relative group shrink-0 flex-shrink-0 header-logo-wrapper">
+      <div className="mb-8 relative group">
         <NextLink 
           href="/" 
           onClick={handleLogoClick}
-          className="block transition-all duration-500 hover:scale-[1.05] active:scale-95 shrink-0 flex-shrink-0 brand-logo"
+          className="block transition-all duration-500 hover:scale-[1.05] active:scale-95"
         >
-          <div className="flex flex-col items-center shrink-0 flex-shrink-0">
-            <div className="relative w-[150px] h-[45px] flex items-center justify-center shrink-0 flex-shrink-0 header-logo">
+          <div className="flex flex-col items-center">
+            <div className="relative w-[150px] h-[45px]">
               <Image 
                 src={myLogo} 
                 alt="Better Call Hana" 
-                width={150}
-                height={45}
+                fill
                 loading="lazy"
-                className="object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-all duration-500 drop-shadow-[0_2px_12px_rgba(34,211,238,0.25)] header-logo shrink-0 flex-shrink-0"
+                className="object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-all duration-500 drop-shadow-[0_2px_12px_rgba(34,211,238,0.25)]"
               />
             </div>
           </div>

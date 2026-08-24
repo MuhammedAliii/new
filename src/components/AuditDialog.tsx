@@ -30,7 +30,7 @@ export function AuditDialog({
         <div className="hidden md:block absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[280px] h-[280px] bg-sky-500/15 rounded-full blur-[60px] pointer-events-none" />
 
         {/* Modal Body Container with Generous Symmetrical Padding */}
-        <div className="max-h-[88vh] overflow-y-auto p-6 sm:p-7 md:p-8 scrollbar-hide relative z-10 flex flex-col items-center text-center">
+        <div className="max-h-[88dvh] overflow-y-auto p-6 sm:p-7 md:p-8 scrollbar-hide relative z-10 flex flex-col items-center text-center overscroll-contain">
           
           {/* Glowing Top Icon */}
           <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-teal-400/20 via-cyan-400/15 to-transparent border border-cyan-400/30 rounded-[1.25rem] flex items-center justify-center mx-auto mb-4 relative shadow-[0_0_30px_rgba(34,211,238,0.25)]">

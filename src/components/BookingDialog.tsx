@@ -32,7 +32,7 @@ export function BookingDialog({
         <div className="hidden md:block absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[280px] h-[280px] bg-sky-500/15 rounded-full blur-[60px] pointer-events-none" />
 
         {/* Premium Concierge Layout */}
-        <div className="max-h-[88vh] overflow-y-auto p-5 sm:p-7 md:p-8 scrollbar-hide relative z-10">
+        <div className="max-h-[88dvh] overflow-y-auto p-5 sm:p-7 md:p-8 scrollbar-hide relative z-10 overscroll-contain">
           <DialogHeader className="text-center mb-6">
             <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-teal-400/20 to-cyan-400/10 border border-cyan-400/30 rounded-[1.25rem] flex items-center justify-center mx-auto mb-4 relative shadow-[0_0_25px_rgba(34,211,238,0.2)]">
               <div className="absolute inset-0 bg-cyan-400/20 rounded-[1.25rem] animate-ping opacity-20" />

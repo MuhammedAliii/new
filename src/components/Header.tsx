@@ -14,29 +14,21 @@ import myLogo from "@/assets/3.png"
 import { Menu, X, ArrowRight, Sparkles } from "lucide-react"
 
 const bruteForceUnlockBody = () => {
-  if (typeof document !== "undefined") {
-    document.body.style.overflow = "";
-    document.body.style.pointerEvents = "auto";
-    document.documentElement.style.pointerEvents = "auto";
-    document.body.style.touchAction = "auto";
-    document.documentElement.style.touchAction = "auto";
-    document.body.removeAttribute("data-scroll-locked");
-    document.documentElement.removeAttribute("data-scroll-locked");
-    document.documentElement.style.overflow = "";
+  if (typeof document === "undefined") return;
+  const body = document.body;
+  const docEl = document.documentElement;
+
+  if (body) {
+    if (body.style.overflow) body.style.overflow = "";
+    if (body.style.pointerEvents && body.style.pointerEvents !== "auto") body.style.pointerEvents = "";
+    if (body.style.touchAction && body.style.touchAction !== "auto") body.style.touchAction = "";
+    if (body.hasAttribute("data-scroll-locked")) body.removeAttribute("data-scroll-locked");
   }
-  if (typeof setTimeout !== "undefined") {
-    setTimeout(() => {
-      if (typeof document !== "undefined") {
-        document.body.style.overflow = "";
-        document.body.style.pointerEvents = "auto";
-        document.documentElement.style.pointerEvents = "auto";
-        document.body.style.touchAction = "auto";
-        document.documentElement.style.touchAction = "auto";
-        document.body.removeAttribute("data-scroll-locked");
-        document.documentElement.removeAttribute("data-scroll-locked");
-        document.documentElement.style.overflow = "";
-      }
-    }, 10);
+  if (docEl) {
+    if (docEl.style.overflow) docEl.style.overflow = "";
+    if (docEl.style.pointerEvents && docEl.style.pointerEvents !== "auto") docEl.style.pointerEvents = "";
+    if (docEl.style.touchAction && docEl.style.touchAction !== "auto") docEl.style.touchAction = "";
+    if (docEl.hasAttribute("data-scroll-locked")) docEl.removeAttribute("data-scroll-locked");
   }
 };
 

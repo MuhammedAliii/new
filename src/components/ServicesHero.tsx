@@ -18,7 +18,7 @@ export function ServicesHero() {
   return (
     <section
       id="services-hero"
-      className="relative w-full overflow-hidden bg-gradient-to-b from-[#071322] via-[#081728] to-[#0a1c30] text-slate-100 min-h-[82vh] md:min-h-[88vh] flex items-center justify-center pt-36 sm:pt-40 md:pt-48 pb-20 md:pb-28 px-4 sm:px-6"
+      className="relative w-full overflow-hidden bg-gradient-to-b from-[#071322] via-[#081728] to-[#0a1c30] text-slate-100 min-h-[82dvh] md:min-h-[88dvh] flex items-center justify-center pt-36 sm:pt-40 md:pt-48 pb-20 md:pb-28 px-4 sm:px-6"
     >
       {/* Background Atmosphere & Atmospheric Horizon Beam */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">

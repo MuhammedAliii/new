@@ -48,7 +48,7 @@ export function ROICalculatorDialog({
         <div className="hidden md:block absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[300px] h-[300px] bg-gradient-to-bl from-teal-400/20 to-transparent rounded-full blur-[70px] pointer-events-none" />
         
         {/* Scrollable Container with keyboard padding */}
-        <div className="max-h-[88vh] overflow-y-auto p-5 sm:p-7 md:p-8 scrollbar-hide relative z-10">
+        <div className="max-h-[88dvh] overflow-y-auto p-5 sm:p-7 md:p-8 scrollbar-hide relative z-10 overscroll-contain">
           <DialogHeader className="mb-5 text-left">
             <div className="w-11 h-11 bg-gradient-to-br from-teal-400/20 to-cyan-400/10 border border-cyan-400/30 rounded-xl flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
               <DollarSign className="w-5 h-5 text-cyan-300" />

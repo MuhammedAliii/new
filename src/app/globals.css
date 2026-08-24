@@ -47,6 +47,7 @@
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     text-rendering: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   body {
@@ -58,6 +59,7 @@
     position: relative;
     -webkit-text-size-adjust: 100%;
     text-rendering: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Universal Media & Control Bounds */
@@ -290,6 +292,10 @@
   .premium-blur {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 
   .scrollbar-hide::-webkit-scrollbar {

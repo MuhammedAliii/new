@@ -30,22 +30,6 @@ export function VideoCTA() {
     return () => observer.disconnect()
   }, [])
 
-  // Dynamic Rendering Check: Ensure translation syncs immediately when component mounts or updates visibility
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const win = window as unknown as { 
-        BetterCallHanaI18n?: { translatePage: (l: string) => void; getLanguage: () => string };
-        updateLanguage?: (l?: string) => void;
-      };
-      if (win.updateLanguage && typeof win.updateLanguage === 'function') {
-        win.updateLanguage();
-      } else if (win.BetterCallHanaI18n && typeof win.BetterCallHanaI18n.translatePage === 'function') {
-        const lang = win.BetterCallHanaI18n.getLanguage ? win.BetterCallHanaI18n.getLanguage() : 'en';
-        win.BetterCallHanaI18n.translatePage(lang);
-      }
-    }
-  }, [isVisible]);
-
   return (
     <section 
       ref={sectionRef}

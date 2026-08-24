@@ -13,6 +13,33 @@
 let scrollY = 0;
 let activeLocks = 0;
 
+export function lockScroll() {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  
+  activeLocks++;
+  if (activeLocks > 1) return; // Already locked by another dialog
+
+  scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+  
+  const body = document.body;
+  const docEl = document.documentElement;
+
+  if (body) {
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+    body.style.touchAction = "none";
+    body.setAttribute("data-scroll-locked", "true");
+  }
+  if (docEl) {
+    docEl.style.overflow = "hidden";
+    docEl.setAttribute("data-scroll-locked", "true");
+  }
+}
+
 export function unlockScroll() {
   if (typeof window === "undefined" || typeof document === "undefined") return;
   

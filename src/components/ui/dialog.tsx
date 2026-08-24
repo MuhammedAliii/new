@@ -35,8 +35,6 @@ const Dialog = ({
   React.useEffect(() => {
     if (!open) {
       unlockBodyScroll();
-      const timer = setTimeout(unlockBodyScroll, 16);
-      return () => clearTimeout(timer);
     }
   }, [open]);
 

@@ -41,21 +41,18 @@ export function Header() {
 
   useEffect(() => {
     setIsVisible(true);
-    let ticking = false;
-    let scrollRafId: number | null = null;
 
-    const isMobileDevice = () => {
-      return typeof window !== "undefined" && window.innerWidth <= 768;
-    };
-
-    // On mobile devices, header is permanently static and transparent to save CPU & GPU
-    if (isMobileDevice()) {
+    // Hard abort for mobile devices to prevent GPU thrashing and CPU lockups
+    if (typeof window !== "undefined" && window.innerWidth <= 768) {
       setIsLightSection(false);
       return;
     }
 
+    let ticking = false;
+    let scrollRafId: number | null = null;
+
     const checkScrollPosition = () => {
-      if (isMobileDevice()) {
+      if (typeof window !== "undefined" && window.innerWidth <= 768) {
         ticking = false;
         return;
       }
@@ -112,7 +109,7 @@ export function Header() {
     };
 
     const handleScroll = () => {
-      if (isMobileDevice()) return;
+      if (typeof window !== "undefined" && window.innerWidth <= 768) return;
       if (!ticking) {
         ticking = true;
         scrollRafId = window.requestAnimationFrame(checkScrollPosition);
@@ -122,7 +119,7 @@ export function Header() {
     checkScrollPosition();
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // ScrollSpy observer setup for sections
+    // ScrollSpy observer setup for sections on desktop
     const sectionIds = ["how-it-works", "business-impact", "contact"];
     const sections = sectionIds
       .map((id) => document.getElementById(id))
@@ -130,6 +127,7 @@ export function Header() {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (typeof window !== "undefined" && window.innerWidth <= 768) return;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);

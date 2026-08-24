@@ -1,4 +1,3 @@
-
 "use client"
 
 import Link from "next/link"
@@ -43,12 +42,17 @@ export function Header() {
     setIsVisible(true);
   }, []);
 
+  // 🔴 FIX 1: Safe iOS Routing Delay. 
+  // We MUST wait 150ms for the scroll lock to successfully release before telling the browser to navigate, otherwise the new page loads permanently frozen.
   const handleMobileNavHardRedirect = (url: string) => {
     setIsMobileMenuOpen(false);
     unlockScroll();
-    if (typeof window !== "undefined") {
-      window.location.assign(url);
-    }
+    
+    setTimeout(() => {
+      if (typeof window !== "undefined") {
+        window.location.assign(url);
+      }
+    }, 150);
   };
 
   const handleLogoClick = () => {
@@ -76,9 +80,10 @@ export function Header() {
           <div className={`transition-all duration-700 ease-out transform shrink-0 flex-shrink-0 header-logo-wrapper ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-95'}`}>
             <Link 
               href="/" 
+              prefetch={false}
               onClick={handleLogoClick}
               id="header-logo-link"
-              className="group relative block transition-transform duration-300 ease-in-out hover:scale-[1.03] active:scale-95 shrink-0 flex-shrink-0 brand-logo"
+              className="group relative block transition-transform duration-300 ease-in-out hover:scale-[1.03] active:scale-95 shrink-0 flex-shrink-0 brand-logo touch-manipulation"
             >
               {/* Soft luminous neon cyan ambient aura on hover */}
               <div className={`absolute -inset-3 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out pointer-events-none ${
@@ -103,6 +108,7 @@ export function Header() {
           </div>
 
           {/* Desktop Navigation - Centered Underneath */}
+          {/* 🔴 FIX 2: Added prefetch={false} to all desktop links to stop background VRAM exhaustion */}
           <div className={`hidden lg:flex items-center gap-4 md:gap-6 transition-all duration-500 delay-150 transform ease-in-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}`}>
             <nav 
               id="main-nav-bar"
@@ -114,6 +120,7 @@ export function Header() {
             >
               <Link 
                 href="/#how-it-works" 
+                prefetch={false}
                 id="nav-process"
                 data-i18n="nav.process"
                 onClick={(e) => handleNavClick(e, "how-it-works")}
@@ -143,6 +150,7 @@ export function Header() {
 
               <Link 
                 href="/services" 
+                prefetch={false}
                 id="nav-services"
                 data-i18n="nav.services"
                 className={`group text-[11px] font-bold uppercase tracking-[0.2em] relative py-1 transition-all duration-300 ease-in-out ${
@@ -189,6 +197,7 @@ export function Header() {
               
               <Link 
                 href="/#business-impact" 
+                prefetch={false}
                 id="nav-impact"
                 data-i18n="nav.impact"
                 onClick={(e) => handleNavClick(e, "business-impact")}
@@ -218,6 +227,7 @@ export function Header() {
               
               <Link 
                 href="/#contact" 
+                prefetch={false}
                 id="nav-contact"
                 data-i18n="nav.contact"
                 onClick={(e) => handleNavClick(e, "contact")}
@@ -256,16 +266,13 @@ export function Header() {
               className="relative overflow-hidden rounded-full px-5 sm:px-7 py-2 min-h-10 h-auto text-[11px] font-bold uppercase tracking-[0.16em] sm:tracking-[0.2em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_25px_rgba(34,211,238,0.4)] hover:shadow-[0_0_35px_rgba(34,211,238,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out border border-cyan-200/40 cursor-pointer text-center whitespace-normal leading-snug"
               onClick={() => setIsBookingOpen(true)}
             >
-              {/* Ambient shimmer */}
               <span className="absolute inset-0 block w-full h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
               <span className="relative z-10">{t('nav.bookDemo', 'Book Demo')}</span>
             </Button>
 
-            {/* Premium Language Switcher Right Next to Book Demo */}
             <LanguageSwitcher isLightSection={isLightSection} align="right" />
           </div>
 
-          {/* Mobile Right Controls: Language Switcher + Book Demo Button + Hamburger Toggle */}
           <div className="flex lg:hidden items-center gap-1.5 sm:gap-2.5">
             <LanguageSwitcher isLightSection={isLightSection} align="right" />
 
@@ -273,17 +280,16 @@ export function Header() {
               id="header-mobile-book-btn"
               data-i18n="nav.bookDemo"
               size="sm"
-              className="relative overflow-hidden rounded-full px-2.5 sm:px-4 py-1.5 min-h-[2rem] sm:min-h-[2.25rem] h-auto text-[8.5px] sm:text-[10px] font-bold uppercase tracking-[0.12em] sm:tracking-[0.18em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.35)] active:scale-95 transition-all border border-cyan-200/40 text-center whitespace-normal leading-tight"
+              className="relative overflow-hidden rounded-full px-2.5 sm:px-4 py-1.5 min-h-[2rem] sm:min-h-[2.25rem] h-auto text-[8.5px] sm:text-[10px] font-bold uppercase tracking-[0.12em] sm:tracking-[0.18em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.35)] active:scale-95 transition-all border border-cyan-200/40 text-center whitespace-normal leading-tight touch-manipulation"
               onClick={() => setIsBookingOpen(true)}
             >
               <span>{t('nav.bookDemo', 'Book Demo')}</span>
             </Button>
 
-            {/* Hamburger Menu Toggle Button */}
             <button
               id="mobile-menu-toggle-btn"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`p-2 sm:p-2.5 rounded-full border transition-all duration-300 active:scale-90 flex items-center justify-center ${
+              className={`p-2 sm:p-2.5 rounded-full border transition-all duration-300 active:scale-90 flex items-center justify-center touch-manipulation ${
                 isMobileMenuOpen
                   ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.4)]"
                   : isLightSection
@@ -312,18 +318,16 @@ export function Header() {
             : "hidden opacity-0 pointer-events-none"
         }`}
       >
-        {/* Solid Backdrop overlay */}
+        {/* 🔴 FIX 3: Removed the undefined 'bruteForceUnlockBody()' crash! */}
         <div 
           className="absolute inset-0 bg-[#061220]"
           onClick={() => {
             setIsMobileMenuOpen(false);
-            bruteForceUnlockBody();
+            unlockScroll();
           }}
         />
 
-        {/* Menu Content Container */}
         <div className="relative z-50 flex flex-col justify-between h-full pt-28 pb-10 px-6 sm:px-8">
-          {/* Main Navigation Links */}
           <div className="flex flex-col gap-3 sm:gap-4 max-w-sm mx-auto w-full">
             <div className="flex items-center justify-between px-2 mb-1">
               <div 
@@ -349,7 +353,7 @@ export function Header() {
                 e.preventDefault();
                 handleMobileNavHardRedirect("/#how-it-works");
               }}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 activeSection === "how-it-works"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100"
@@ -367,7 +371,7 @@ export function Header() {
                 e.preventDefault();
                 handleMobileNavHardRedirect("/services");
               }}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 isServicesPage
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100"
@@ -380,15 +384,16 @@ export function Header() {
               <span className="text-xs text-cyan-400/70 font-mono">02</span>
             </a>
 
+            {/* 🔴 FIX 4: Removed undefined function here too */}
             <button
               id="mobile-nav-live-demo"
               data-i18n="nav.liveDemo"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                bruteForceUnlockBody();
-                setIsVideoOpen(true);
+                unlockScroll();
+                setTimeout(() => setIsVideoOpen(true), 150);
               }}
-              className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 transition-none active:scale-[0.98] text-left cursor-pointer"
+              className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 transition-none active:scale-[0.98] text-left cursor-pointer touch-manipulation"
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.liveDemo', 'Live Demo')}</span>
               <span className="text-xs text-cyan-400/70 font-mono">03</span>
@@ -402,7 +407,7 @@ export function Header() {
                 e.preventDefault();
                 handleMobileNavHardRedirect("/#business-impact");
               }}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 activeSection === "business-impact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100"
@@ -420,7 +425,7 @@ export function Header() {
                 e.preventDefault();
                 handleMobileNavHardRedirect("/#contact");
               }}
-              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
+              className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] touch-manipulation ${
                 activeSection === "contact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
                   : "bg-white/[0.04] border-white/10 text-slate-100"
@@ -431,17 +436,17 @@ export function Header() {
             </a>
           </div>
 
-          {/* Mobile Menu Footer Actions */}
           <div className="max-w-sm mx-auto w-full space-y-4 pt-4 border-t border-white/10">
+            {/* 🔴 FIX 5: Cleaned up the undefined crash on this button */}
             <Button
               id="mobile-menu-book-consult-btn"
               data-i18n="nav.bookDiscovery"
               size="lg"
-              className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.4)] active:scale-95 transition-all border border-cyan-200/50 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.4)] active:scale-95 transition-all border border-cyan-200/50 flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                bruteForceUnlockBody();
-                setIsBookingOpen(true);
+                unlockScroll();
+                setTimeout(() => setIsBookingOpen(true), 150);
               }}
             >
               <span>{t('nav.bookDiscovery', 'Book Discovery Demo')}</span>
@@ -463,5 +468,3 @@ export function Header() {
     </>
   )
 }
-
-

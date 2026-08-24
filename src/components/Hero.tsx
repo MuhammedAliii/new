@@ -39,7 +39,7 @@ export function Hero() {
   return (
     <section 
       id="hero-section"
-      className="relative w-full overflow-hidden bg-gradient-to-b from-[#071322] via-[#081728] to-[#0a1c30] text-slate-100 min-h-[92vh] sm:min-h-[96vh] lg:min-h-screen flex items-center justify-center pt-32 sm:pt-36 md:pt-40 pb-20 md:pb-24 px-4 sm:px-6"
+      className="relative w-full overflow-hidden bg-gradient-to-b from-[#071322] via-[#081728] to-[#0a1c30] text-slate-100 min-h-[92dvh] sm:min-h-[96dvh] lg:min-h-[100dvh] flex items-center justify-center pt-32 sm:pt-36 md:pt-40 pb-20 md:pb-24 px-4 sm:px-6"
     >
       {/* Ambient background atmosphere */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">

@@ -9,9 +9,27 @@ import { cn } from "@/lib/utils"
 const unlockBodyScroll = () => {
   if (typeof document !== "undefined") {
     document.body.style.overflow = "";
-    document.body.style.pointerEvents = "";
+    document.body.style.pointerEvents = "auto";
+    document.documentElement.style.pointerEvents = "auto";
+    document.body.style.touchAction = "auto";
+    document.documentElement.style.touchAction = "auto";
     document.body.removeAttribute("data-scroll-locked");
+    document.documentElement.removeAttribute("data-scroll-locked");
     document.documentElement.style.overflow = "";
+  }
+  if (typeof setTimeout !== "undefined") {
+    setTimeout(() => {
+      if (typeof document !== "undefined") {
+        document.body.style.overflow = "";
+        document.body.style.pointerEvents = "auto";
+        document.documentElement.style.pointerEvents = "auto";
+        document.body.style.touchAction = "auto";
+        document.documentElement.style.touchAction = "auto";
+        document.body.removeAttribute("data-scroll-locked");
+        document.documentElement.removeAttribute("data-scroll-locked");
+        document.documentElement.style.overflow = "";
+      }
+    }, 10);
   }
 };
 

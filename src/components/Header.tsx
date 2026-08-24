@@ -13,6 +13,33 @@ import Image from "next/image"
 import myLogo from "@/assets/3.png"
 import { Menu, X, ArrowRight, Sparkles } from "lucide-react"
 
+const bruteForceUnlockBody = () => {
+  if (typeof document !== "undefined") {
+    document.body.style.overflow = "";
+    document.body.style.pointerEvents = "auto";
+    document.documentElement.style.pointerEvents = "auto";
+    document.body.style.touchAction = "auto";
+    document.documentElement.style.touchAction = "auto";
+    document.body.removeAttribute("data-scroll-locked");
+    document.documentElement.removeAttribute("data-scroll-locked");
+    document.documentElement.style.overflow = "";
+  }
+  if (typeof setTimeout !== "undefined") {
+    setTimeout(() => {
+      if (typeof document !== "undefined") {
+        document.body.style.overflow = "";
+        document.body.style.pointerEvents = "auto";
+        document.documentElement.style.pointerEvents = "auto";
+        document.body.style.touchAction = "auto";
+        document.documentElement.style.touchAction = "auto";
+        document.body.removeAttribute("data-scroll-locked");
+        document.documentElement.removeAttribute("data-scroll-locked");
+        document.documentElement.style.overflow = "";
+      }
+    }, 10);
+  }
+};
+
 export function Header() {
   const pathname = usePathname();
   const { t } = useLanguage();
@@ -20,159 +47,45 @@ export function Header() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isLightSection, setIsLightSection] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
 
   const isServicesPage = pathname === "/services";
+  const isLightSection = false;
 
   // Prevent background scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "";
-      document.body.style.pointerEvents = "";
+      bruteForceUnlockBody();
     }
     return () => {
-      document.body.style.overflow = "";
-      document.body.style.pointerEvents = "";
+      bruteForceUnlockBody();
     };
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
     setIsVisible(true);
-
-    // Hard abort for mobile devices to prevent GPU thrashing and CPU lockups
-    if (typeof window !== "undefined" && window.innerWidth <= 768) {
-      setIsLightSection(false);
-      return;
-    }
-
-    let ticking = false;
-    let scrollRafId: number | null = null;
-
-    const checkScrollPosition = () => {
-      if (typeof window !== "undefined" && window.innerWidth <= 768) {
-        ticking = false;
-        return;
-      }
-
-      const scrollY = window.scrollY;
-      if (scrollY < 200) {
-        setActiveSection("");
-      }
-
-      // Dynamically detect if header is currently over a light background section on desktop
-      const header = document.getElementById("main-header");
-      if (!header) {
-        ticking = false;
-        return;
-      }
-      const headerRect = header.getBoundingClientRect();
-      const headerMidY = headerRect.top + headerRect.height / 2;
-
-      const howItWorks = document.getElementById("how-it-works");
-      const demo = document.getElementById("demo");
-      const impact = document.getElementById("business-impact");
-      const contact = document.getElementById("contact");
-
-      let isLight = false;
-      if (howItWorks) {
-        const r = howItWorks.getBoundingClientRect();
-        const lightStart = r.top + r.height * 0.35;
-        if (headerMidY >= lightStart && headerMidY < r.bottom) {
-          isLight = true;
-        }
-      }
-      if (demo) {
-        const r = demo.getBoundingClientRect();
-        if (headerMidY >= r.top && headerMidY <= r.bottom) {
-          isLight = true;
-        }
-      }
-      if (impact) {
-        const r = impact.getBoundingClientRect();
-        if (headerMidY >= r.top && headerMidY <= r.bottom) {
-          isLight = true;
-        }
-      }
-      if (contact) {
-        const r = contact.getBoundingClientRect();
-        const lightEnd = r.top + r.height * 0.45;
-        if (headerMidY >= r.top && headerMidY < lightEnd) {
-          isLight = true;
-        }
-      }
-
-      setIsLightSection(isLight);
-      ticking = false;
-    };
-
-    const handleScroll = () => {
-      if (typeof window !== "undefined" && window.innerWidth <= 768) return;
-      if (!ticking) {
-        ticking = true;
-        scrollRafId = window.requestAnimationFrame(checkScrollPosition);
-      }
-    };
-
-    checkScrollPosition();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // ScrollSpy observer setup for sections on desktop
-    const sectionIds = ["how-it-works", "business-impact", "contact"];
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (typeof window !== "undefined" && window.innerWidth <= 768) return;
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-25% 0px -45% 0px",
-        threshold: 0,
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => {
-      if (scrollRafId !== null) {
-        window.cancelAnimationFrame(scrollRafId);
-      }
-      window.removeEventListener("scroll", handleScroll);
-      sections.forEach((section) => observer.unobserve(section));
-      observer.disconnect();
-    };
   }, []);
+
+  const handleMobileNavHardRedirect = (url: string) => {
+    setIsMobileMenuOpen(false);
+    bruteForceUnlockBody();
+    if (typeof window !== "undefined") {
+      window.location.assign(url);
+    }
+  };
 
   const handleLogoClick = () => {
     setIsMobileMenuOpen(false);
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = '';
-      document.body.style.pointerEvents = '';
-    }
+    bruteForceUnlockBody();
     setActiveSection("");
   };
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleNavClick = (_e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     setIsMobileMenuOpen(false);
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = '';
-      document.body.style.pointerEvents = '';
-    }
-    if (typeof window !== 'undefined' && pathname === '/') {
-      const element = document.getElementById(id);
-      if (element) {
-        setActiveSection(id);
-      }
-    }
+    bruteForceUnlockBody();
+    setActiveSection(id);
   };
 
   return (
@@ -428,10 +341,7 @@ export function Header() {
           className="absolute inset-0 bg-[#061220]"
           onClick={() => {
             setIsMobileMenuOpen(false);
-            if (typeof document !== 'undefined') {
-              document.body.style.overflow = '';
-              document.body.style.pointerEvents = '';
-            }
+            bruteForceUnlockBody();
           }}
         />
 
@@ -455,11 +365,14 @@ export function Header() {
               </div>
             </div>
 
-            <Link
+            <a
               href="/#how-it-works"
               id="mobile-nav-process"
               data-i18n="nav.process"
-              onClick={(e) => handleNavClick(e, "how-it-works")}
+              onClick={(e) => {
+                e.preventDefault();
+                handleMobileNavHardRedirect("/#how-it-works");
+              }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 activeSection === "how-it-works"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
@@ -468,18 +381,15 @@ export function Header() {
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.process', 'Process')}</span>
               <span className="text-xs text-cyan-400/70 font-mono">01</span>
-            </Link>
+            </a>
 
-            <Link
+            <a
               href="/services"
               id="mobile-nav-services"
               data-i18n="nav.services"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                if (typeof document !== 'undefined') {
-                  document.body.style.overflow = '';
-                  document.body.style.pointerEvents = '';
-                }
+              onClick={(e) => {
+                e.preventDefault();
+                handleMobileNavHardRedirect("/services");
               }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 isServicesPage
@@ -492,17 +402,14 @@ export function Header() {
                 <span className="px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 text-[9px] font-mono uppercase">New</span>
               </div>
               <span className="text-xs text-cyan-400/70 font-mono">02</span>
-            </Link>
+            </a>
 
             <button
               id="mobile-nav-live-demo"
               data-i18n="nav.liveDemo"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                if (typeof document !== 'undefined') {
-                  document.body.style.overflow = '';
-                  document.body.style.pointerEvents = '';
-                }
+                bruteForceUnlockBody();
                 setIsVideoOpen(true);
               }}
               className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100 transition-none active:scale-[0.98] text-left cursor-pointer"
@@ -511,11 +418,14 @@ export function Header() {
               <span className="text-xs text-cyan-400/70 font-mono">03</span>
             </button>
 
-            <Link
+            <a
               href="/#business-impact"
               id="mobile-nav-impact"
               data-i18n="nav.impact"
-              onClick={(e) => handleNavClick(e, "business-impact")}
+              onClick={(e) => {
+                e.preventDefault();
+                handleMobileNavHardRedirect("/#business-impact");
+              }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 activeSection === "business-impact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
@@ -524,13 +434,16 @@ export function Header() {
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.impact', 'Impact')}</span>
               <span className="text-xs text-cyan-400/70 font-mono">04</span>
-            </Link>
+            </a>
 
-            <Link
+            <a
               href="/#contact"
               id="mobile-nav-contact"
               data-i18n="nav.contact"
-              onClick={(e) => handleNavClick(e, "contact")}
+              onClick={(e) => {
+                e.preventDefault();
+                handleMobileNavHardRedirect("/#contact");
+              }}
               className={`flex items-center justify-between p-4 rounded-2xl border transition-none active:scale-[0.98] ${
                 activeSection === "contact"
                   ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] font-extrabold"
@@ -539,7 +452,7 @@ export function Header() {
             >
               <span className="text-base font-bold uppercase tracking-[0.15em]">{t('nav.contact', 'Contact')}</span>
               <span className="text-xs text-cyan-400/70 font-mono">05</span>
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Menu Footer Actions */}
@@ -548,9 +461,10 @@ export function Header() {
               id="mobile-menu-book-consult-btn"
               data-i18n="nav.bookDiscovery"
               size="lg"
-              className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.4)] active:scale-95 transition-all border border-cyan-200/50 flex items-center justify-center gap-2"
+              className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.4)] active:scale-95 transition-all border border-cyan-200/50 flex items-center justify-center gap-2 cursor-pointer"
               onClick={() => {
                 setIsMobileMenuOpen(false);
+                bruteForceUnlockBody();
                 setIsBookingOpen(true);
               }}
             >

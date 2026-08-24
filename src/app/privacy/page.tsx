@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
   }, []);
 
   return (
-    <div className="main-page-wrapper relative z-10 flex flex-col min-h-screen overflow-x-hidden bg-transparent md:bg-[#071322]">
+    <div className="main-page-wrapper relative z-10 flex flex-col min-h-[100dvh] overflow-x-hidden bg-transparent md:bg-[#071322]">
       {/* Universal Premium Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-grid" />

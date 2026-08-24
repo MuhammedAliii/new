@@ -22,7 +22,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="main-page-wrapper relative z-10 flex flex-col min-h-screen selection:bg-primary selection:text-white overflow-x-hidden bg-transparent md:bg-[#071322]">
+    <div className="main-page-wrapper relative z-10 flex flex-col min-h-[100dvh] selection:bg-primary selection:text-white overflow-x-hidden bg-transparent md:bg-[#071322]">
       {/* Universal Premium Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-dot-grid opacity-20" />

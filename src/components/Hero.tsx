@@ -22,7 +22,6 @@ const LED_POINTS = Array.from({ length: 64 }).map((_, index) => {
     cy,
     r: isCardinal ? 4.5 : isMajor ? 3.5 : 2.2,
     fill: isCardinal ? "#ffffff" : isMajor ? "#e0f2fe" : "#38bdf8",
-    filter: isMajor ? "url(#majorLedGlow)" : "url(#ledGlow)",
     opacity: isCardinal ? 1 : isMajor ? 0.95 : 0.8,
   };
 });
@@ -82,27 +81,6 @@ export function Hero() {
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
-            <defs>
-              {/* Clean, high-tech LED Glow filter */}
-              <filter id="ledGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="3.5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="majorLedGlow" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="5" result="blur1" />
-                <feGaussianBlur stdDeviation="2" result="blur2" />
-                <feMerge>
-                  <feMergeNode in="blur1" />
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
             {/* Outer delicate guide orbit line */}
             <circle 
               cx="500" 
@@ -113,16 +91,23 @@ export function Hero() {
               strokeDasharray="4 8"
             />
 
-            {/* Exact Ring of 64 Mathematically Positioned Glowing LED Points */}
+            {/* Exact Ring of 64 Mathematically Positioned Glowing LED Points (Vector Optimized for WebKit/iOS) */}
             {LED_POINTS.map((point) => (
               <g key={point.index}>
-                {/* Glowing LED Point */}
+                {/* Soft vector ambient halo */}
+                <circle
+                  cx={point.cx}
+                  cy={point.cy}
+                  r={point.r * 2.2}
+                  fill={point.fill}
+                  opacity={point.opacity * 0.3}
+                />
+                {/* Core bright LED Point */}
                 <circle
                   cx={point.cx}
                   cy={point.cy}
                   r={point.r}
                   fill={point.fill}
-                  filter={point.filter}
                   opacity={point.opacity}
                 />
               </g>

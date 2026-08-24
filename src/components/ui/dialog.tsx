@@ -5,25 +5,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-
-const unlockBodyScroll = () => {
-  if (typeof document === "undefined") return;
-  const body = document.body;
-  const docEl = document.documentElement;
-
-  if (body) {
-    if (body.style.overflow) body.style.overflow = "";
-    if (body.style.pointerEvents && body.style.pointerEvents !== "auto") body.style.pointerEvents = "";
-    if (body.style.touchAction && body.style.touchAction !== "auto") body.style.touchAction = "";
-    if (body.hasAttribute("data-scroll-locked")) body.removeAttribute("data-scroll-locked");
-  }
-  if (docEl) {
-    if (docEl.style.overflow) docEl.style.overflow = "";
-    if (docEl.style.pointerEvents && docEl.style.pointerEvents !== "auto") docEl.style.pointerEvents = "";
-    if (docEl.style.touchAction && docEl.style.touchAction !== "auto") docEl.style.touchAction = "";
-    if (docEl.hasAttribute("data-scroll-locked")) docEl.removeAttribute("data-scroll-locked");
-  }
-};
+import { lockScroll, unlockScroll } from "@/lib/scrollLock"
 
 const Dialog = ({
   open,
@@ -33,24 +15,28 @@ const Dialog = ({
 }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root>) => {
   const handleOpenChange = React.useCallback(
     (nextOpen: boolean) => {
-      if (!nextOpen) {
-        unlockBodyScroll();
+      if (nextOpen) {
+        lockScroll();
+      } else {
+        unlockScroll();
       }
       onOpenChange?.(nextOpen);
     },
     [onOpenChange]
   );
 
-  // Instant scroll-lock cleanup when dialog closes or unmounts
+  // Sync scroll lock when open prop changes
   React.useEffect(() => {
-    if (!open) {
-      unlockBodyScroll();
+    if (open) {
+      lockScroll();
+    } else {
+      unlockScroll();
     }
   }, [open]);
 
   React.useEffect(() => {
     return () => {
-      unlockBodyScroll();
+      unlockScroll();
     };
   }, []);
 
@@ -96,15 +82,15 @@ const DialogContent = React.forwardRef<
       }}
       onCloseAutoFocus={(e) => {
         e.preventDefault();
-        unlockBodyScroll();
+        unlockScroll();
         props.onCloseAutoFocus?.(e);
       }}
       onPointerDownOutside={(e) => {
-        unlockBodyScroll();
+        unlockScroll();
         props.onPointerDownOutside?.(e);
       }}
       onEscapeKeyDown={(e) => {
-        unlockBodyScroll();
+        unlockScroll();
         props.onEscapeKeyDown?.(e);
       }}
       className={cn(
@@ -115,7 +101,7 @@ const DialogContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close 
-        onClick={unlockBodyScroll}
+        onClick={unlockScroll}
         className="absolute right-4 top-4 rounded-full p-2 bg-white/[0.07] border border-white/15 text-slate-300 hover:text-white hover:bg-cyan-500/20 hover:border-cyan-400/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:pointer-events-none z-20 cursor-pointer"
       >
         <X className="h-4 w-4" />

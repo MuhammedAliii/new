@@ -13,24 +13,7 @@ import Image from "next/image"
 import myLogo from "@/assets/3.png"
 import { Menu, X, ArrowRight, Sparkles } from "lucide-react"
 
-const bruteForceUnlockBody = () => {
-  if (typeof document === "undefined") return;
-  const body = document.body;
-  const docEl = document.documentElement;
-
-  if (body) {
-    if (body.style.overflow) body.style.overflow = "";
-    if (body.style.pointerEvents && body.style.pointerEvents !== "auto") body.style.pointerEvents = "";
-    if (body.style.touchAction && body.style.touchAction !== "auto") body.style.touchAction = "";
-    if (body.hasAttribute("data-scroll-locked")) body.removeAttribute("data-scroll-locked");
-  }
-  if (docEl) {
-    if (docEl.style.overflow) docEl.style.overflow = "";
-    if (docEl.style.pointerEvents && docEl.style.pointerEvents !== "auto") docEl.style.pointerEvents = "";
-    if (docEl.style.touchAction && docEl.style.touchAction !== "auto") docEl.style.touchAction = "";
-    if (docEl.hasAttribute("data-scroll-locked")) docEl.removeAttribute("data-scroll-locked");
-  }
-};
+import { lockScroll, unlockScroll } from "@/lib/scrollLock"
 
 export function Header() {
   const pathname = usePathname();
@@ -44,15 +27,15 @@ export function Header() {
   const isServicesPage = pathname === "/services";
   const isLightSection = false;
 
-  // Prevent background scroll when mobile menu is open
+  // Prevent background scroll when mobile menu is open using iOS Fixed Body pattern
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
+      lockScroll();
     } else {
-      bruteForceUnlockBody();
+      unlockScroll();
     }
     return () => {
-      bruteForceUnlockBody();
+      unlockScroll();
     };
   }, [isMobileMenuOpen]);
 
@@ -62,7 +45,7 @@ export function Header() {
 
   const handleMobileNavHardRedirect = (url: string) => {
     setIsMobileMenuOpen(false);
-    bruteForceUnlockBody();
+    unlockScroll();
     if (typeof window !== "undefined") {
       window.location.assign(url);
     }
@@ -70,13 +53,13 @@ export function Header() {
 
   const handleLogoClick = () => {
     setIsMobileMenuOpen(false);
-    bruteForceUnlockBody();
+    unlockScroll();
     setActiveSection("");
   };
 
   const handleNavClick = (_e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     setIsMobileMenuOpen(false);
-    bruteForceUnlockBody();
+    unlockScroll();
     setActiveSection(id);
   };
 

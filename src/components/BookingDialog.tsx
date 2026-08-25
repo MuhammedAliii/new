@@ -57,9 +57,9 @@ export function BookingDialog({
     handleOpenChange(false); 
   };
 
+  // 🔴 THE SILVER BULLET: modal={false}
+  // This completely revokes Radix UI's permission to lock the iPhone screen.
   return (
-    {/* 🔴 THE SILVER BULLET: modal={false} 
-        This completely revokes Radix UI's permission to lock the iPhone screen. */}
     <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent 
         onOpenAutoFocus={(e) => e.preventDefault()}

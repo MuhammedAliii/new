@@ -73,7 +73,10 @@ export function Header() {
           // the router's hash-scroll timing.
           el.scrollIntoView({ behavior: 'instant', block: 'start' });
         } else {
-          // Different page: let the router handle full navigation.
+          // 🔴 FIX 6: Different page — reset scroll to 0 BEFORE navigating,
+          // so the new page never inherits a leftover scroll position (e.g.
+          // the bottom of the old page) while it's still mounting.
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
           router.push(url);
         }
       });

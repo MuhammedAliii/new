@@ -20,12 +20,21 @@ export default function ServicesPage() {
       history.scrollRestoration = 'manual';
     }
     
-    // 50ms delay guarantees Next.js has finished rendering before we snap to top
-    const timer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }, 50);
+    // 🔴 FIX: Wait two real animation frames instead of a fixed 50ms guess.
+    // A fixed delay can fire before iOS Safari has actually finished settling
+    // after the route change, leaving the page stuck wherever it landed.
+    // Two rAFs guarantee the browser has genuinely repainted first.
+    let frame1: number, frame2: number;
+    frame1 = requestAnimationFrame(() => {
+      frame2 = requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      });
+    });
 
-    return () => clearTimeout(timer);
+    return () => {
+      cancelAnimationFrame(frame1);
+      if (frame2) cancelAnimationFrame(frame2);
+    };
   }, []);
 
   return (

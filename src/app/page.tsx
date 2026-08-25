@@ -16,7 +16,15 @@ export default function Home() {
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
       }
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      // 🔴 FIX: Wait two real animation frames instead of resetting immediately.
+      // Right after a route change, iOS Safari hasn't always finished settling
+      // yet — resetting scroll too early can get ignored or leave the scroll
+      // engine confused. Two rAFs guarantee the browser has actually repainted.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        });
+      });
     }
   }, []);
 

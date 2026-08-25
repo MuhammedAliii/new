@@ -14,13 +14,20 @@ export default function PrivacyPolicy() {
     document.body.style.overflow = '';
     document.body.style.pointerEvents = '';
     
-    // 2. A 50ms delay guarantees Next.js has finished rendering the page 
-    // before we force the browser to snap to the top.
-    const timer = setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 50);
+    // 2. 🔴 FIX: Wait two real animation frames instead of a fixed 50ms guess,
+    // so this only runs once the browser has genuinely repainted after the
+    // route change, not based on a magic-number delay.
+    let frame1: number, frame2: number;
+    frame1 = requestAnimationFrame(() => {
+      frame2 = requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      });
+    });
 
-    return () => clearTimeout(timer);
+    return () => {
+      cancelAnimationFrame(frame1);
+      if (frame2) cancelAnimationFrame(frame2);
+    };
   }, []);
 
   return (

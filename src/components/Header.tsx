@@ -47,19 +47,37 @@ export function Header() {
     setIsVisible(true);
   }, []);
 
-  // 🔴 FIX 3: The Flawless Next.js Mobile Routing
+  // 🔴 FIX 5: Stop guessing with a fixed 150ms delay — instead, wait for the browser
+  // to actually confirm (via two animation frames) that it has repainted after the
+  // scroll lock was removed, THEN jump to the section ourselves. This avoids the
+  // race that was leaving iOS Safari's scroll engine stuck thinking the top of the
+  // page was somewhere it wasn't.
   const handleMobileNavRoute = (url: string) => {
     setIsMobileMenuOpen(false);
-    
+
     // Wipe the lock instantly but DO NOT restore scroll position,
-    // otherwise it will fight Next.js trying to scroll to the new section.
+    // otherwise it will fight our jump to the new section.
     clearAllScrollLocks(true);
-    
-    // Give the DOM 150ms to recalculate its un-locked coordinates, 
-    // then use Next.js router for a lightning-fast, refresh-free jump!
-    setTimeout(() => {
-      router.push(url);
-    }, 150);
+
+    const hashIndex = url.indexOf('#');
+    const targetId = hashIndex !== -1 ? url.slice(hashIndex + 1) : null;
+
+    // Wait two real animation frames — this guarantees the browser has fully
+    // finished repainting after the unlock before we touch scroll again,
+    // which a fixed setTimeout can't guarantee on a slower or busy phone.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = targetId ? document.getElementById(targetId) : null;
+        if (el) {
+          // Same page: jump to the section ourselves instead of trusting
+          // the router's hash-scroll timing.
+          el.scrollIntoView({ behavior: 'instant', block: 'start' });
+        } else {
+          // Different page: let the router handle full navigation.
+          router.push(url);
+        }
+      });
+    });
   };
 
   const handleLogoClick = () => {

@@ -27,8 +27,8 @@ export default function TermsOfService() {
     return () => clearTimeout(timer);
   }, []);
 
+  // 🔴 NEW FIX: Changed min-h-screen to min-h-[100dvh] to stop iOS Safari bouncing
   return (
-    {/* 🔴 NEW FIX: Changed min-h-screen to min-h-[100dvh] to stop iOS Safari bouncing */}
     <div className="main-page-wrapper relative z-10 flex flex-col min-h-[100dvh] overflow-x-hidden bg-transparent md:bg-[#071322]">
       {/* Universal Premium Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">

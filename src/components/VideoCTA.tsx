@@ -39,7 +39,7 @@ export function VideoCTA() {
       {/* Thematic Ambient Tech Details */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(14,165,233,0.15)_1px,transparent_1px)] [background-size:24px_24px] opacity-35" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-tr from-cyan-400/15 via-sky-300/20 to-teal-300/15 rounded-full blur-[90px]" />
+        <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-tr from-cyan-400/15 via-sky-300/20 to-teal-300/15 rounded-full blur-[90px]" />
       </div>
       
       <div className="max-w-4xl mx-auto px-6 relative z-10">
@@ -52,7 +52,7 @@ export function VideoCTA() {
             <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/40 to-transparent pointer-events-none" />
             
             {/* Decorative Radial Corner Accent */}
-            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[320px] h-[320px] bg-gradient-to-bl from-teal-400/15 via-cyan-400/10 to-transparent rounded-full blur-[70px] pointer-events-none" />
+            <div className="hidden md:block absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[320px] h-[320px] bg-gradient-to-bl from-teal-400/15 via-cyan-400/10 to-transparent rounded-full blur-[70px] pointer-events-none" />
             
             <div className="relative z-10 flex flex-col items-center text-center">
               <div className="flex items-center px-3.5 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6 rounded-full bg-teal-500/10 backdrop-blur-md border border-teal-500/25 text-teal-800 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em] shadow-sm">

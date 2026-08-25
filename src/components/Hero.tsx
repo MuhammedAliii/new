@@ -55,7 +55,7 @@ export function Hero() {
       >
         
         {/* Soft Ambient Radiance behind the Eclipse */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-400/15 to-teal-400/10 blur-[60px] sm:blur-[90px] opacity-75 pointer-events-none z-0" />
+        <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-400/15 to-teal-400/10 blur-[60px] sm:blur-[90px] opacity-75 pointer-events-none z-0" />
 
         {/* THE CENTRAL ECLIPSE SHADOW (Solid, heavy, stable circular mask) */}
         <div 

@@ -38,14 +38,14 @@ export function Contact() {
       {/* Background Thematic Details */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(56,189,248,0.15)_1px,transparent_1px)] [background-size:28px_28px] opacity-30" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[450px] bg-gradient-to-tr from-cyan-500/20 via-sky-400/15 to-teal-400/15 rounded-full blur-[120px]" />
+        <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[450px] bg-gradient-to-tr from-cyan-500/20 via-sky-400/15 to-teal-400/15 rounded-full blur-[120px]" />
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
         <div className={`relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3.5rem] bg-gradient-to-br from-[#08182b]/95 via-[#0c243d]/90 to-[#071526]/95 backdrop-blur-3xl p-6 sm:p-10 md:p-20 text-center text-white border border-cyan-500/30 shadow-[0_30px_90px_-20px_rgba(2,8,16,0.8)] transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} hover:shadow-[0_40px_100px_-20px_rgba(34,211,238,0.3)] hover:scale-[1.01] hover:-translate-y-1.5 active:scale-[0.98] group cursor-default ring-1 ring-cyan-400/20`}>
           {/* Internal Celestial Aurora Accents */}
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-cyan-400/20 via-teal-400/15 to-transparent rounded-full blur-[90px] pointer-events-none transition-transform duration-1000 ease-in-out group-hover:scale-125" />
-          <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[350px] h-[350px] bg-sky-500/20 rounded-full blur-[80px] pointer-events-none transition-transform duration-1000 ease-in-out group-hover:scale-125" />
+          <div className="hidden md:block absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-cyan-400/20 via-teal-400/15 to-transparent rounded-full blur-[90px] pointer-events-none transition-transform duration-1000 ease-in-out group-hover:scale-125" />
+          <div className="hidden md:block absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[350px] h-[350px] bg-sky-500/20 rounded-full blur-[80px] pointer-events-none transition-transform duration-1000 ease-in-out group-hover:scale-125" />
           <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent pointer-events-none" />
 
           <div className="relative z-10 max-w-xl mx-auto flex flex-col items-center gap-5 sm:gap-6 md:gap-8">

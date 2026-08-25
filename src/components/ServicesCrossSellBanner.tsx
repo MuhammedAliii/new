@@ -46,8 +46,8 @@ export function ServicesCrossSellBanner() {
           }`}
         >
           {/* Subtle Ambient Decorative Gradients inside card */}
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[400px] h-[400px] bg-gradient-to-bl from-teal-400/20 via-cyan-400/20 to-transparent rounded-full blur-[80px] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[350px] h-[350px] bg-sky-400/20 rounded-full blur-[70px] pointer-events-none" />
+          <div className="hidden md:block absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[400px] h-[400px] bg-gradient-to-bl from-teal-400/20 via-cyan-400/20 to-transparent rounded-full blur-[80px] pointer-events-none" />
+          <div className="hidden md:block absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[350px] h-[350px] bg-sky-400/20 rounded-full blur-[70px] pointer-events-none" />
 
           <div className="relative z-10 space-y-10 md:space-y-12">
             {/* Header Block: Centered Typographical Hierarchy */}

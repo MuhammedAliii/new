@@ -26,10 +26,10 @@ export function ServicesHero() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92vw] max-w-7xl h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent blur-[1px]" />
         
         {/* Subtle, slow-moving abstract gradient orb */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[400px] sm:w-[550px] md:w-[700px] h-[400px] sm:h-[550px] md:h-[700px] rounded-full bg-gradient-to-tr from-cyan-400/20 via-sky-300/15 to-slate-200/10 blur-[110px] opacity-80 pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[400px] sm:w-[550px] md:w-[700px] h-[400px] sm:h-[550px] md:h-[700px] rounded-full bg-gradient-to-tr from-cyan-400/20 via-sky-300/15 to-slate-200/10 blur-[110px] opacity-80 pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
         
         {/* Floating secondary silver accent orb */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] md:w-[380px] h-[260px] md:h-[380px] rounded-full bg-gradient-to-br from-white/10 via-cyan-300/15 to-transparent blur-[80px] pointer-events-none" />
+        <div className="hidden md:block absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] md:w-[380px] h-[260px] md:h-[380px] rounded-full bg-gradient-to-br from-white/10 via-cyan-300/15 to-transparent blur-[80px] pointer-events-none" />
 
         {/* Soft bottom blend into the next section */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-[#0a1c30]/80 to-[#0a1c30]" />

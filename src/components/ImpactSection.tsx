@@ -41,8 +41,8 @@ export function ImpactSection() {
       {/* Thematic Ambient Grid & Aurora Glows */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute inset-0 bg-[radial-gradient(rgba(14,165,233,0.12)_1px,transparent_1px)] [background-size:28px_28px] opacity-40" />
-        <div className="absolute top-1/3 -left-32 w-[600px] h-[600px] bg-red-400/5 rounded-full blur-[140px]" />
-        <div className="absolute top-1/3 -right-32 w-[600px] h-[600px] bg-teal-400/15 rounded-full blur-[140px]" />
+        <div className="hidden md:block absolute top-1/3 -left-32 w-[600px] h-[600px] bg-red-400/5 rounded-full blur-[140px]" />
+        <div className="hidden md:block absolute top-1/3 -right-32 w-[600px] h-[600px] bg-teal-400/15 rounded-full blur-[140px]" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">

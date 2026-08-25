@@ -34,8 +34,8 @@ export function ServicesWhyUs() {
     >
       {/* Background Soft Glows and Atmospheric Highlights */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-1/4 right-[-5%] w-[550px] h-[550px] bg-cyan-400/15 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-10 left-[-5%] w-[550px] h-[550px] bg-sky-300/25 rounded-full blur-[140px] pointer-events-none" />
+        <div className="hidden md:block absolute top-1/4 right-[-5%] w-[550px] h-[550px] bg-cyan-400/15 rounded-full blur-[140px] pointer-events-none" />
+        <div className="hidden md:block absolute bottom-10 left-[-5%] w-[550px] h-[550px] bg-sky-300/25 rounded-full blur-[140px] pointer-events-none" />
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">

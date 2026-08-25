@@ -58,9 +58,9 @@ export function HowItWorks() {
         <div className="absolute inset-0 bg-[radial-gradient(rgba(56,189,248,0.18)_1px,transparent_1px)] [background-size:28px_28px] opacity-40" />
 
         {/* Ambient Sky Light Blue & Cyan Light Leaks */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-cyan-400/15 via-sky-400/10 to-transparent rounded-full blur-[100px]" />
-        <div className="absolute top-1/2 -left-20 w-[500px] h-[500px] bg-sky-300/20 rounded-full blur-[120px]" />
-        <div className="absolute top-2/3 -right-20 w-[500px] h-[500px] bg-teal-400/15 rounded-full blur-[120px]" />
+        <div className="hidden md:block absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-cyan-400/15 via-sky-400/10 to-transparent rounded-full blur-[100px]" />
+        <div className="hidden md:block absolute top-1/2 -left-20 w-[500px] h-[500px] bg-sky-300/20 rounded-full blur-[120px]" />
+        <div className="hidden md:block absolute top-2/3 -right-20 w-[500px] h-[500px] bg-teal-400/15 rounded-full blur-[120px]" />
 
         {/* Delicate Architectural Flow Lines */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full">

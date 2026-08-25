@@ -100,7 +100,7 @@ export function ServicesCoreFeatures() {
     >
       {/* Background Atmosphere */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-cyan-500/8 rounded-full blur-[140px] pointer-events-none" />
+        <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-cyan-500/8 rounded-full blur-[140px] pointer-events-none" />
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">

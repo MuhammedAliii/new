@@ -47,24 +47,22 @@ export function Header() {
     setIsVisible(true);
   }, []);
 
-  // 🔴 FIX 5: Stop guessing with a fixed 150ms delay — instead, wait for the browser
-  // to actually confirm (via two animation frames) that it has repainted after the
-  // scroll lock was removed, THEN jump to the section ourselves. This avoids the
-  // race that was leaving iOS Safari's scroll engine stuck thinking the top of the
-  // page was somewhere it wasn't.
+  // 🔴 FIX 7: Every previous fix here tried to win a timing race between
+  // Next.js's fast in-app page swap and iOS Safari's scroll engine — and
+  // iOS kept winning, leaving the new page stuck at whatever scroll position
+  // the old page was at. So instead of racing it again, we skip the fast
+  // in-app swap entirely for cross-page links and force a real, full page
+  // load. A real navigation always starts completely fresh, at the true top,
+  // with zero memory of the previous page's scroll position — no race left
+  // to lose. Same-page section jumps (which don't reload anything) keep
+  // using the fast in-app scroll, since that part was never the problem.
   const handleMobileNavRoute = (url: string) => {
     setIsMobileMenuOpen(false);
-
-    // Wipe the lock instantly but DO NOT restore scroll position,
-    // otherwise it will fight our jump to the new section.
     clearAllScrollLocks(true);
 
     const hashIndex = url.indexOf('#');
     const targetId = hashIndex !== -1 ? url.slice(hashIndex + 1) : null;
 
-    // Wait two real animation frames — this guarantees the browser has fully
-    // finished repainting after the unlock before we touch scroll again,
-    // which a fixed setTimeout can't guarantee on a slower or busy phone.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const el = targetId ? document.getElementById(targetId) : null;
@@ -73,11 +71,10 @@ export function Header() {
           // the router's hash-scroll timing.
           el.scrollIntoView({ behavior: 'instant', block: 'start' });
         } else {
-          // 🔴 FIX 6: Different page — reset scroll to 0 BEFORE navigating,
-          // so the new page never inherits a leftover scroll position (e.g.
-          // the bottom of the old page) while it's still mounting.
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-          router.push(url);
+          // Different page: force a real full navigation instead of
+          // Next.js's client-side swap, so the new page always loads
+          // fresh at the top with no inherited scroll state.
+          window.location.href = url;
         }
       });
     });

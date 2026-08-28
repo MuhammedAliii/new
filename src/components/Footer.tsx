@@ -19,7 +19,7 @@ export function Footer() {
   return (
     <footer className="py-20 border-t border-cyan-500/20 bg-[#071322] flex flex-col items-center text-center px-6 relative z-10">
       <div className="mb-8 relative group">
-        <NextLink 
+        <a 
           href="/" 
           onClick={handleLogoClick}
           className="block transition-all duration-500 hover:scale-[1.05] active:scale-95"
@@ -35,7 +35,7 @@ export function Footer() {
               />
             </div>
           </div>
-        </NextLink>
+        </a>
       </div>
       <div className="space-y-4 relative z-20">
         <p className="text-white/90 font-medium text-sm sm:text-base tracking-wide [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
@@ -46,33 +46,37 @@ export function Footer() {
         </p>
         
         {/* Fine-print Navigation & Legal Links with High Contrast & Crisp Legibility */}
+        {/* 🔴 FIX: Plain anchor tags instead of Next.js Link — forces a real full
+            page navigation, so clicking these from a scrolled-down position (which
+            is guaranteed, since the footer only appears at the bottom of the page)
+            can never inherit a stale scroll position on the next page. */}
         <div className="flex flex-wrap gap-6 sm:gap-8 justify-center pt-3 items-center relative z-30">
-          <NextLink 
+          <a 
             href="/services" 
             id="footer-services-link"
             data-i18n="footer.services"
             className="text-sm font-medium text-cyan-300 hover:text-white transition-all duration-300 ease-in-out underline-offset-4 hover:underline [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]"
           >
             {t('footer.services', 'Web Services')}
-          </NextLink>
+          </a>
           <span className="w-1 h-1 rounded-full bg-cyan-400/40" />
-          <NextLink 
+          <a 
             href="/privacy" 
             id="footer-privacy-link"
             data-i18n="footer.privacy"
             className="text-sm font-medium text-white/85 hover:text-cyan-300 transition-all duration-300 ease-in-out underline-offset-4 hover:underline [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]"
           >
             {t('footer.privacy', 'Privacy Policy')}
-          </NextLink>
+          </a>
           <span className="w-1 h-1 rounded-full bg-cyan-400/40" />
-          <NextLink 
+          <a 
             href="/terms" 
             id="footer-terms-link"
             data-i18n="footer.terms"
             className="text-sm font-medium text-white/85 hover:text-cyan-300 transition-all duration-300 ease-in-out underline-offset-4 hover:underline [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]"
           >
             {t('footer.terms', 'Terms of Service')}
-          </NextLink>
+          </a>
         </div>
 
         {/* LinkedIn icon centered with balanced vertical spacing */}
